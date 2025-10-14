@@ -10,14 +10,14 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* A light grey background */
+            background-color: #f8fafc;
         }
         .sidebar {
             background-color: #ffffff;
             border-right: 1px solid #e2e8f0;
         }
         .main-content {
-            background-color: #f1f5f9; /* Slightly different grey for content area */
+            background-color: #f1f5f9;
         }
         .card {
             background-color: #ffffff;
@@ -31,7 +31,7 @@
             border-color: #cbd5e1;
         }
         .primary-btn {
-            background-color: #14b8a6; /* Teal color from screenshots */
+            background-color: #14b8a6;
             color: white;
         }
         .primary-btn:hover {
@@ -45,6 +45,13 @@
         .nav-item-active svg {
              color: #14b8a6;
         }
+        .modal-backdrop {
+            background-color: rgba(15, 23, 42, 0.5);
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
 <body class="flex h-screen">
@@ -56,195 +63,155 @@
         </div>
         <nav class="flex-grow p-2">
             <ul class="space-y-1">
-                <!-- Active Dashboard Item -->
                 <li>
                     <a href="#" class="nav-item-active flex items-center px-3 py-2.5 text-sm rounded-md">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         Dashboard
                     </a>
                 </li>
-                <li>
-                    <a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-                        Assessments
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        Groups
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md">
-                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                        Courses
-                    </a>
-                </li>
-                 <li>
-                    <a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"/></svg>
-                        Invite Links
-                    </a>
-                </li>
+                <li><a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>Assessments</a></li>
+                <li><a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Groups</a></li>
+                <li><a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Courses</a></li>
+                <li><a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"/></svg>Invite Links</a></li>
             </ul>
         </nav>
         <div class="p-2 mt-auto border-t border-gray-200">
              <ul class="space-y-1">
-                <li>
-                    <a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-                        Help
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88Z"/><path d="M18 2v6h6"/><path d="m15.5 13.5-3 3-3-3"/></svg>
-                        Sign Out
-                    </a>
-                </li>
+                <li><a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Help</a></li>
+                <li><a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88Z"/><path d="M18 2v6h6"/><path d="m15.5 13.5-3 3-3-3"/></svg>Sign Out</a></li>
             </ul>
         </div>
     </aside>
 
-    <!-- Main Content Area -->
+    <!-- Main Content -->
     <main class="main-content flex-1 p-8 overflow-y-auto">
         <div class="max-w-7xl mx-auto">
-
-            <!-- Header -->
             <div class="flex justify-between items-center mb-8">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-800">Welcome back, Abdul</h1>
+                    <h1 class="text-3xl font-bold text-gray-800">Welcome back, Trainer</h1>
                     <p class="text-gray-500 mt-1">Here's what's happening with your learners and courses today.</p>
                 </div>
-                <button class="primary-btn font-semibold px-5 py-3 rounded-lg flex items-center space-x-2">
+                <button id="qrBtn" class="primary-btn font-semibold px-5 py-3 rounded-lg flex items-center space-x-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 12h10"/><path d="M12 7v10"/></svg>
                     <span>Start Live Session / Generate QR Code</span>
                 </button>
             </div>
 
-            <!-- Key Metrics -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="card p-5">
-                    <h3 class="text-sm font-medium text-gray-500">LSA Credits</h3>
-                    <p class="text-3xl font-bold text-gray-800 mt-1">11</p>
-                    <p class="text-xs text-gray-400 mt-1">Available learner assessment credits.</p>
-                </div>
-                <div class="card p-5">
-                    <h3 class="text-sm font-medium text-gray-500">Course Builder Credits</h3>
-                    <p class="text-3xl font-bold text-gray-800 mt-1">9</p>
-                    <p class="text-xs text-gray-400 mt-1">Available AI course adaptation credits.</p>
-                </div>
-                <div class="card p-5 col-span-1 md:col-span-2">
-                     <h3 class="text-sm font-medium text-gray-500">Assessments Completed This Week</h3>
-                     <p class="text-3xl font-bold text-gray-800 mt-1">14</p>
-                     <p class="text-xs text-green-500 mt-1">+5 since yesterday</p>
-                </div>
+                <div class="card p-5"><h3 class="text-sm font-medium text-gray-500">LSA Credits</h3><p class="text-3xl font-bold text-gray-800 mt-1">11</p><p class="text-xs text-gray-400 mt-1">Learner assessment credits.</p></div>
+                <div class="card p-5"><h3 class="text-sm font-medium text-gray-500">Course Builder Credits</h3><p class="text-3xl font-bold text-gray-800 mt-1">9</p><p class="text-xs text-gray-400 mt-1">AI course adaptation credits.</p></div>
+                <div class="card p-5 col-span-1 md:col-span-2"><h3 class="text-sm font-medium text-gray-500">Assessments This Week</h3><p class="text-3xl font-bold text-gray-800 mt-1">14</p><p class="text-xs text-green-500 mt-1">+5 since yesterday</p></div>
             </div>
 
-            <!-- Dashboard Panels -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
-                <!-- Recent Activity Panel -->
                 <div class="card lg:col-span-2 p-6">
                     <h2 class="text-lg font-semibold text-gray-800 mb-4">Recent Activity</h2>
                     <p class="text-sm text-gray-500 mb-6">New learner assessments are ready for review. Prepare for your next session.</p>
                     <div class="space-y-4">
-                        <!-- Activity Item 1 -->
-                        <div class="flex items-center justify-between p-3 bg-teal-50 rounded-lg border border-teal-200">
-                            <div class="flex items-center">
-                                <img src="https://placehold.co/40x40/E6F6F5/14B8A6?text=TR" alt="Tom Ryan" class="rounded-full mr-4">
-                                <div>
-                                    <p class="font-medium text-gray-800">Tom Ryan completed their LSA</p>
-                                    <p class="text-xs text-gray-500">Added to 'NurtureUK' group &middot; 2 hours ago</p>
-                                </div>
-                            </div>
-                            <a href="#" class="text-sm font-semibold text-teal-600 hover:text-teal-800">View Results &rarr;</a>
-                        </div>
-                         <!-- Activity Item 2 -->
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
-                            <div class="flex items-center">
-                                <img src="https://placehold.co/40x40/F3F4F6/6B7280?text=MM" alt="Mahim" class="rounded-full mr-4">
-                                <div>
-                                    <p class="font-medium text-gray-800">Mahim M. completed their LSA</p>
-                                    <p class="text-xs text-gray-500">Added to 'STAI Team Member' group &middot; 1 day ago</p>
-                                </div>
-                            </div>
-                            <a href="#" class="text-sm font-semibold text-gray-600 hover:text-gray-800">View Results &rarr;</a>
-                        </div>
-                         <!-- Activity Item 3 -->
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
-                            <div class="flex items-center">
-                               <img src="https://placehold.co/40x40/F3F4F6/6B7280?text=JG" alt="Jane" class="rounded-full mr-4">
-                                <div>
-                                    <p class="font-medium text-gray-800">Jane Goodall completed their LSA</p>
-                                    <p class="text-xs text-gray-500">Added to 'Learning Styles Assessor' group &middot; 3 days ago</p>
-                                </div>
-                            </div>
-                            <a href="#" class="text-sm font-semibold text-gray-600 hover:text-gray-800">View Results &rarr;</a>
-                        </div>
+                        <div class="flex items-center justify-between p-3 bg-teal-50 rounded-lg border border-teal-200"><div class="flex items-center"><img src="https://placehold.co/40x40/E6F6F5/14B8A6?text=LA" alt="Learner A" class="rounded-full mr-4"><div><p class="font-medium text-gray-800">Learner A completed their LSA</p><p class="text-xs text-gray-500">Added to 'Client Team Alpha' group &middot; 2 hours ago</p></div></div><button class="view-results-btn text-sm font-semibold text-teal-600 hover:text-teal-800">View Results &rarr;</button></div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border"><div class="flex items-center"><img src="https://placehold.co/40x40/F3F4F6/6B7280?text=LB" alt="Learner B" class="rounded-full mr-4"><div><p class="font-medium text-gray-800">Learner B completed their LSA</p><p class="text-xs text-gray-500">Added to 'Internal Team Beta' group &middot; 1 day ago</p></div></div><button class="view-results-btn text-sm font-semibold text-gray-600 hover:text-gray-800">View Results &rarr;</button></div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border"><div class="flex items-center"><img src="https://placehold.co/40x40/F3F4F6/6B7280?text=LC" alt="Learner C" class="rounded-full mr-4"><div><p class="font-medium text-gray-800">Learner C completed their LSA</p><p class="text-xs text-gray-500">Added to 'Client Team Alpha' group &middot; 3 days ago</p></div></div><button class="view-results-btn text-sm font-semibold text-gray-600 hover:text-gray-800">View Results &rarr;</button></div>
                     </div>
                 </div>
 
-                <!-- Groups & Courses Column -->
                 <div class="space-y-8">
-                    <!-- Your Groups Panel -->
-                    <div class="card p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-lg font-semibold text-gray-800">Your Groups</h2>
-                             <button class="text-sm primary-btn font-medium px-3 py-1 rounded-md hover:shadow-sm">+ New Group</button>
-                        </div>
-                        <ul class="divide-y divide-gray-200">
-                           <li class="py-3 flex justify-between items-center">
-                               <div>
-                                   <p class="font-medium text-gray-800">NurtureUK</p>
-                                   <p class="text-xs text-gray-500">Last activity: 2 hours ago</p>
-                               </div>
-                               <span class="text-xs font-semibold text-gray-500">14 Learners</span>
-                           </li>
-                           <li class="py-3 flex justify-between items-center">
-                               <div>
-                                   <p class="font-medium text-gray-800">STAI Team Member</p>
-                                   <p class="text-xs text-gray-500">Last activity: 1 day ago</p>
-                               </div>
-                               <span class="text-xs font-semibold text-gray-500">8 Learners</span>
-                           </li>
-                           <li class="py-3 flex justify-between items-center">
-                               <div>
-                                   <p class="font-medium text-gray-800">Learning Styles Assessor</p>
-                                   <p class="text-xs text-gray-500">Last activity: 3 days ago</p>
-                               </div>
-                               <span class="text-xs font-semibold text-gray-500">22 Learners</span>
-                           </li>
-                        </ul>
-                        <a href="#" class="block text-center mt-4 text-sm font-semibold text-teal-600 hover:text-teal-800">View All Groups &rarr;</a>
-                    </div>
-                    
-                    <!-- Your Courses Panel -->
-                     <div class="card p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-lg font-semibold text-gray-800">Your Courses</h2>
-                             <button class="text-sm primary-btn font-medium px-3 py-1 rounded-md hover:shadow-sm">+ New Course</button>
-                        </div>
-                        <ul class="divide-y divide-gray-200">
-                           <li class="py-3">
-                                <p class="font-medium text-gray-800">Adapting to Kinesthetic Learners</p>
-                                <p class="text-xs text-gray-500">Last updated: 5 days ago</p>
-                           </li>
-                           <li class="py-3">
-                                <p class="font-medium text-gray-800">Introduction to STAI</p>
-                                <p class="text-xs text-gray-500">Last updated: 2 weeks ago</p>
-                           </li>
-                        </ul>
-                        <a href="#" class="block text-center mt-4 text-sm font-semibold text-teal-600 hover:text-teal-800">View All Courses &rarr;</a>
-                    </div>
-
+                    <div class="card p-6"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-semibold text-gray-800">Your Groups</h2><button class="text-sm primary-btn font-medium px-3 py-1 rounded-md hover:shadow-sm">+ New Group</button></div><ul class="divide-y divide-gray-200"><li class="py-3 flex justify-between items-center"><div><p class="font-medium text-gray-800">Client Team Alpha</p><p class="text-xs text-gray-500">Last activity: 2 hours ago</p></div><span class="text-xs font-semibold text-gray-500">14 Learners</span></li><li class="py-3 flex justify-between items-center"><div><p class="font-medium text-gray-800">Internal Team Beta</p><p class="text-xs text-gray-500">Last activity: 1 day ago</p></div><span class="text-xs font-semibold text-gray-500">8 Learners</span></li><li class="py-3 flex justify-between items-center"><div><p class="font-medium text-gray-800">Assessors Group</p><p class="text-xs text-gray-500">Last activity: 3 days ago</p></div><span class="text-xs font-semibold text-gray-500">22 Learners</span></li></ul><a href="#" class="block text-center mt-4 text-sm font-semibold text-teal-600 hover:text-teal-800">View All Groups &rarr;</a></div>
+                    <div class="card p-6"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-semibold text-gray-800">Your Courses</h2><button class="text-sm primary-btn font-medium px-3 py-1 rounded-md hover:shadow-sm">+ New Course</button></div><ul class="divide-y divide-gray-200"><li class="py-3"><p class="font-medium text-gray-800">Adapting to Kinesthetic Learners</p><p class="text-xs text-gray-500">Last updated: 5 days ago</p></li><li class="py-3"><p class="font-medium text-gray-800">Introduction to STAI</p><p class="text-xs text-gray-500">Last updated: 2 weeks ago</p></li></ul><a href="#" class="block text-center mt-4 text-sm font-semibold text-teal-600 hover:text-teal-800">View All Courses &rarr;</a></div>
                 </div>
             </div>
-
         </div>
     </main>
 
+    <!-- QR Code Modal -->
+    <div id="qrModal" class="fixed inset-0 z-50 modal-backdrop opacity-0 items-center justify-center hidden" onclick="closeModal('qrModal')">
+        <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-md m-4 transform scale-95" onclick="event.stopPropagation()">
+            <div class="p-6 border-b"><h2 class="text-xl font-semibold">Start Live Session</h2><p class="text-sm text-gray-500 mt-1">Use your mobile device to scan the code and launch the simplified in-session view.</p></div>
+            <div class="p-8 text-center"><div class="w-64 h-64 bg-gray-200 mx-auto flex items-center justify-center rounded-lg"><span class="text-gray-500">QR Code Placeholder</span></div></div>
+            <div class="px-6 py-4 bg-gray-50 rounded-b-lg text-right"><button onclick="closeModal('qrModal')" class="font-semibold text-gray-600 hover:text-gray-800 px-4 py-2 rounded-md">Close</button></div>
+        </div>
+    </div>
+    
+    <!-- Results Modal -->
+    <div id="resultsModal" class="fixed inset-0 z-50 modal-backdrop opacity-0 items-center justify-center hidden" onclick="closeModal('resultsModal')">
+        <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-3xl m-4 transform scale-95" onclick="event.stopPropagation()">
+             <div class="flex justify-between items-center p-4 border-b">
+                <h2 class="text-xl font-semibold text-gray-800">Group Learning Style Report</h2>
+                <button onclick="closeModal('resultsModal')" class="text-gray-400 hover:text-gray-600 text-2xl font-bold">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto" style="max-height: 70vh;">
+                <h3 class="font-semibold text-gray-800">Group Composition Summary: Client Team Alpha</h3>
+                <p class="text-sm text-gray-500 mb-4">The selected group is made up of the following learning styles:</p>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm mb-6">
+                    <div><span class="font-medium">Expressive-Visual:</span> 21.4%</div>
+                    <div><span class="font-medium">Practical-Kinesthetic:</span> 21.4%</div>
+                    <div><span class="font-medium">Ind-Analytical-Kinesthetic:</span> 14.3%</div>
+                    <div><span class="font-medium">Expressive-Kinesthetic:</span> 7.1%</div>
+                    <div><span class="font-medium">Logical-Visual:</span> 7.1%</div>
+                    <div><span class="font-medium">Practical-Visual:</span> 7.1%</div>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-gray-800">Recommendations for Whole Group</h4>
+                    <ul class="list-disc list-inside text-sm text-gray-700 mt-2 space-y-1">
+                        <li>Incorporate hands-on activities and real-world applications to engage kinesthetic learners.</li>
+                        <li>Utilize visual aids such as diagrams and flowcharts to support visual learners.</li>
+                        <li>Incorporate collaborative and discussion-based sessions for expressive learners.</li>
+                    </ul>
+                </div>
+
+                <h4 class="font-semibold text-gray-800 mt-6 mb-2">Adapting for Individual Styles</h4>
+                <div class="text-sm text-gray-700 space-y-3">
+                    <p><strong>Expressive-Visual (Learners B, D, E):</strong> Use lively visuals, group activities, and interactive discussions.</p>
+                    <p><strong>Practical-Kinesthetic (Learners A, C, F):</strong> Engage learners with practical exercises that require physical activity.</p>
+                </div>
+            </div>
+             <div class="px-6 py-4 bg-gray-50 rounded-b-lg text-right"><button onclick="closeModal('resultsModal')" class="font-semibold text-gray-600 hover:text-gray-800 px-4 py-2 rounded-md">Close</button></div>
+        </div>
+    </div>
+
+    <script>
+        // Modal Handling
+        const qrBtn = document.getElementById('qrBtn');
+        const viewResultsBtns = document.querySelectorAll('.view-results-btn');
+
+        qrBtn.addEventListener('click', () => openModal('qrModal'));
+        viewResultsBtns.forEach(btn => {
+            btn.addEventListener('click', () => openModal('resultsModal'));
+        });
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const modalContent = modal.querySelector('.modal-content');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                if (modalContent) {
+                    modalContent.classList.remove('scale-95');
+                }
+            }, 10);
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const modalContent = modal.querySelector('.modal-content');
+            
+            modal.classList.add('opacity-0');
+            if (modalContent) {
+                modalContent.classList.add('scale-95');
+            }
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+    </script>
+
 </body>
 </html>
+
+
 
