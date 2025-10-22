@@ -6,8 +6,6 @@
     <title>Smart-Training AI Dashboard</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Load Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,6 +43,33 @@
         /* Style for selected content module */
         .selected-module {
             background-color: #ccfbf1; /* teal-100 */
+        }
+        /* Style for VARK modules */
+        .vark-module {
+            transition: all 0.2s ease-in-out;
+            border: 2px solid transparent;
+        }
+        .vark-module-selected {
+            border-color: #14b8a6; /* teal-500 */
+            background-color: #f0fdfa; /* teal-50 */
+            transform: scale(1.02);
+        }
+
+        /* --- STYLES FOR TYPING ANIMATION --- */
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1.2em;
+            background-color: #14b8a6; /* teal-500 */
+            animation: blink 0.7s infinite;
+            margin-left: 4px;
+            position: relative;
+            top: 4px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
     </style>
 </head>
@@ -114,20 +139,23 @@
                     <div id="group-view">
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             
-                            <!-- Left Column: Donut Chart & Custom Legend -->
-                            <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-sm">
-                                <h2 class="text-lg font-semibold text-gray-900 mb-4">Learning Style Distribution</h2>
-                                <!-- Chart Container -->
-                                <div class="relative h-[400px] w-[400px] mx-auto">
-                                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
-                                        <span class="text-5xl font-bold text-gray-800">14</span>
-                                        <span class="block text-lg text-gray-600">Learners</span>
+                            <!-- Left Column: VARK Modules & Detailed Guidance -->
+                            <div class="lg:col-span-2 space-y-6">
+                                <div class="bg-white p-6 rounded-lg shadow-sm">
+                                    <h2 class="text-lg font-semibold text-gray-900 mb-6">Learning Style Distribution (VARK)</h2>
+                                    <div id="vark-container" class="grid grid-cols-2 gap-4">
+                                        <!-- VARK Modules will be injected here by JS -->
                                     </div>
-                                    <canvas id="learningStyleChart"></canvas>
                                 </div>
-                                <!-- Custom Legend Container -->
-                                <div id="custom-legend-container" class="mt-6 space-y-3">
-                                    <!-- Legend items will be injected here by JS -->
+
+                                <!-- UPDATED: Detailed Guidance CONTAINER (no longer hidden) -->
+                                <div id="detailed-guidance-container" class="bg-white text-gray-700 rounded-lg shadow-sm p-6 min-h-[300px]">
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Detailed Guidance</h3>
+                                    <!-- The typing animation will happen inside this div -->
+                                    <div id="ai-output-text" class="text-sm text-gray-600 whitespace-pre-line leading-relaxed">
+                                        <!-- Placeholder text -->
+                                        <p class="text-gray-400">Click a module above to see detailed guidance and specific prompts for that learner group.</p>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -141,19 +169,19 @@
                                         <div class="text-center">
                                             <div class="text-5xl font-bold text-amber-600">65%</div>
                                             <div class="text-sm font-medium text-amber-700">Alignment (Amber)</div>
-                                            <p class="text-xs text-gray-500 mt-1">Score reflects the gap between your 'Visual' style and the group's 'Kinaesthetic' (42%) preference.</p>
+                                            <p class="text-xs text-gray-500 mt-1">Score reflects the gap between your 'Visual' style and the group's 'Kinaesthetic' (43%) preference.</p>
                                         </div>
                                         <p class="text-xs text-amber-700 bg-amber-50 p-2 rounded-md mt-3">
-                                            <span class="font-bold">Gap Identified:</span> You over-index on 'Visual'. Your group has a significant 'Kinaesthetic' (42%) component. See prompts to balance.
+                                            <span class="font-bold">Gap Identified:</span> You over-index on 'Visual'. Your group has a significant 'Kinaesthetic' (43%) component. See prompts to balance.
                                         </p>
                                     </div>
                                 </div>
 
-                                <!-- Panel 2: Delivery Prompts (Scrollable) -->
+                                <!-- Panel 2: Delivery Prompts (Scrollable) - STANDALONE -->
                                 <div id="delivery-prompts-panel" class="bg-white p-5 rounded-lg shadow-sm h-64 flex flex-col">
                                     <h3 id="delivery-prompts-title" class="text-md font-semibold text-gray-900 mb-4 flex-shrink-0">Delivery Prompts</h3>
                                     <div id="delivery-prompts-content" class="scrollable-panel flex-1 overflow-y-auto pr-2 space-y-3">
-                                        <!-- Content is injected by JS -->
+                                        <!-- Content is injected by JS (default prompt only) -->
                                     </div>
                                 </div>
 
@@ -185,15 +213,6 @@
                                                 <li>M (Logical-Vis.)</li>
                                             </ul>
                                         </div>
-                                        <!-- Pairing 3 -->
-                                        <div class="bg-gray-50 p-3 rounded-lg">
-                                            <h4 class="text-sm text-gray-800 font-medium">Group 3 (Solo/Mixed Focus)</h4>
-                                            <p class="text-xs text-gray-600">Good for self-directed research & writing.</p>
-                                            <ul class="mt-2 text-xs list-disc list-inside text-gray-600">
-                                                <li>Lama (Logical-R/W)</li>
-                                                <li>Danah Alnamlah (Interpersonal-Aud.)</li>
-                                            </ul>
-                                        </div>
                                     </div>
                                 </div>
 
@@ -201,7 +220,7 @@
                                 <div class="bg-white p-5 rounded-lg shadow-sm h-64 flex flex-col">
                                     <h3 class="text-md font-semibold text-gray-900 mb-4 flex-shrink-0">Engagement Over Time</h3>
                                     <div class="scrollable-panel flex-1 overflow-y-auto pr-2 h-full w-full">
-                                        <!-- Line Chart Placeholder -->
+                                        <!-- We need Chart.js for this -->
                                         <canvas id="engagementChart"></canvas>
                                     </div>
                                 </div>
@@ -221,7 +240,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Panel 5: Export Report Button (Restored) -->
+                                <!-- Panel 5: Export Report Button -->
                                 <div class="bg-white p-5 rounded-lg shadow-sm">
                                     <button class="flex w-full items-center justify-center gap-2 px-4 py-2 bg-white text-gray-700 font-medium border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -293,7 +312,7 @@
 
                             </div>
                             
-                            <!-- Right Column: Scrollable Panels (Restored) -->
+                            <!-- Right Column: Scrollable Panels -->
                             <div class="lg:col-span-1 flex flex-col gap-6">
                                 
                                 <!-- Panel 1: Content Analysis (Scrollable) -->
@@ -342,6 +361,9 @@
         </div>
     </div>
 
+    <!-- We still need Chart.js for the engagement chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!-- JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -382,181 +404,206 @@
                 qrModal.classList.add('hidden');
             });
             
-            // Close modal by clicking background
             qrModal.addEventListener('click', (e) => {
                 if (e.target === qrModal) {
                     qrModal.classList.add('hidden');
                 }
             });
 
-            // Prompts Data
+            // --- GROUP VIEW SCRIPT ---
+
             const promptsTitle = document.getElementById('delivery-prompts-title');
             const promptsContent = document.getElementById('delivery-prompts-content');
-            let selectedSegment = null;
+            const varkContainer = document.getElementById('vark-container');
+            // --- UPDATED IDs ---
+            const detailedGuidanceContainer = document.getElementById('detailed-guidance-container');
+            const aiOutputText = document.getElementById('ai-output-text');
+            let selectedVarkModule = null;
+            let currentTypewriterInterval = null; // To stop previous animation
 
-            // Data from the new screenshot
-            const chartData = {
-                labels: [
-                    'Interpersonal-Visual',
-                    'Practical-Kinaesthetic',
-                    'Intrapersonal-Kinesthetic',
-                    'Interpersonal-Auditory',
-                    'Intrapersonal-Visual',
-                    'Logical-Reading/Writing',
-                    'Practical-Visual',
-                    'Logical-Visual',
-                    'Interpersonal-Kinesthetic'
-                ],
-                learners: [
-                    ['Abdul', 'Waad', 'Ghadeer'], // 3
-                    ['Will Rankin', 'Allan', 'Abdul'], // 3
-                    ['Abdul', 'Will The Kid'], // 2
-                    ['Danah Alnamlah'], // 1
-                    ['Learner E'], // 1
-                    ['Lama'], // 1
-                    ['Shahad Alangari'], // 1
-                    ['M'], // 1
-                    ['Learner I'] // 1
-                ],
-                counts: [3, 3, 2, 1, 1, 1, 1, 1, 1],
-                percentages: ['21%', '21%', '14%', '7%', '7%', '7%', '7%', '7%', '7%'],
-                datasets: [{
-                    data: [21, 21, 14, 7, 7, 7, 7, 7, 7],
-                    backgroundColor: [
-                        '#C7B9FF', // Interpersonal-Visual
-                        '#A7F3D0', // Practical-Kinaesthetic
-                        '#A5D8FF', // Intrapersonal-Kinesthetic
-                        '#FFC1CC', // Interpersonal-Auditory
-                        '#FFDDAA', // Intrapersonal-Visual
-                        '#FFB3BA', // Logical-Reading/Writing
-                        '#BAE6FD', // Practical-Visual
-                        '#B2A4FF', // Logical-Visual
-                        '#B4E0E0'  // Interpersonal-Kinesthetic
+            // This new data structure aggregates the 9 styles into 4 VARK categories
+            const varkData = {
+                'see': {
+                    label: 'See', // UPDATED
+                    helpText: '43% of group - prefer to engage with content visually.', // UPDATED
+                    learners: 6,
+                    percentage: '43%',
+                    color: 'blue',
+                    icon: `<svg class="h-10 w-10 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639l4.433-7.447A1.012 1.012 0 017.1 4h9.8a1.012 1.012 0 01.633.235l4.433 7.447a1.012 1.012 0 010 .639l-4.433 7.447A1.012 1.012 0 0116.9 20H7.1a1.012 1.012 0 01-.633-.235L2.036 12.322z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`,
+                    breakdown: [
+                        { name: 'Interpersonal-Visual', count: 3 },
+                        { name: 'Intrapersonal-Visual', count: 1 },
+                        { name: 'Practical-Visual', count: 1 },
+                        { name: 'Logical-Visual', count: 1 }
                     ],
-                    hoverOffset: 16,
-                    offset: (context) => (context.dataIndex === selectedSegment ? 12 : 0), // This "pops" the segment
-                    borderColor: '#fff', // This is the white gap
-                    borderWidth: 8, // This is the white gap width
-                    hoverBorderWidth: 8 // Keep hover consistent
-                }]
+                    // --- UPDATED AI RESPONSE TEXT ---
+                    aiResponseText: "43% of your group (6 learners) are 'See' learners.\n\nHere's the deeper dive on that:\n• Interpersonal-Visual: 3 learners\n• Intrapersonal-Visual: 1 learner\n• Practical-Visual: 1 learner\n• Logical-Visual: 1 learner\n\nSuggested prompts to engage them:\n• Use storyboards, concept maps, and video.\n• Anchor key concepts with diagrams.\n• For the 'Interpersonal' learners, make these group activities."
+                },
+                'say': {
+                    label: 'Say', // UPDATED
+                    helpText: '7% of group - prefers to engage with audio and discussion.', // UPDATED (grammar)
+                    learners: 1,
+                    percentage: '7%',
+                    color: 'teal',
+                    icon: `<svg class="h-10 w-10 text-teal-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg>`,
+                    breakdown: [
+                        { name: 'Interpersonal-Auditory', count: 1 }
+                    ],
+                    // --- UPDATED AI RESPONSE TEXT ---
+                    aiResponseText: "Only 7% of your group (1 learner) is a 'Say' learner.\n\nHere's the deeper dive:\n• Interpersonal-Auditory: 1 learner\n\nSuggested prompts to engage them:\n• This learner will thrive in discussion.\n• Use 'Think-Pair-Share', debates, and Socratic questioning.\n• Encourage them to 'teach back' concepts in their own words."
+                },
+                'read': {
+                    label: 'Read', // UPDATED
+                    helpText: '7% of group - prefers to engage with text.', // UPDATED (grammar)
+                    learners: 1,
+                    percentage: '7%',
+                    color: 'indigo',
+                    icon: `<svg class="h-10 w-10 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" /></svg>`,
+                    breakdown: [
+                        { name: 'Logical-Reading/Writing', count: 1 }
+                    ],
+                    // --- UPDATED AI RESPONSE TEXT ---
+                    aiResponseText: "Only 7% of your group (1 learner) is a 'Read' learner.\n\nHere's the deeper dive:\n• Logical-Reading/Writing: 1 learner\n\nSuggested prompts to engage them:\n• This learner processes by reading and writing.\n• Provide structured frameworks, and have them write pros/cons lists.\n• Give them quiet time to read."
+                },
+                'do': {
+                    label: 'Do', // UPDATED
+                    helpText: '43% of group - prefer to engage with hands-on activities.', // UPDATED
+                    learners: 6,
+                    percentage: '43%',
+                    color: 'amber',
+                    icon: `<svg class="h-10 w-10 text-amber-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.5-2.5m2.5 2.5l-2.5 2.5M15.042 21.672L13.684 16.6m0 0l-2.5-2.5m2.5 2.5l-2.5 2.5M15.042 21.672L13.684 16.6m0 0l-2.5-2.5m2.5 2.5l-2.5 2.5M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>`,
+                    breakdown: [
+                        { name: 'Practical-Kinaesthetic', count: 3 },
+                        { name: 'Intrapersonal-Kinesthetic', count: 2 },
+                        { name: 'Interpersonal-Kinesthetic', count: 1 }
+                    ],
+                    // --- UPDATED AI RESPONSE TEXT ---
+                    aiResponseText: "This is a key group: 43% (6 learners) are 'Do' learners.\n\nHere's the deeper dive:\n• Practical-Kinaesthetic: 3 learners\n• Intrapersonal-Kinesthetic: 2 learners\n• Interpersonal-Kinesthetic: 1 learner\n\nSuggested prompts to engage them:\n• For Practical: Use simulations, task stations, and learning labs.\n• For Intrapersonal: Offer solo challenge kits or 'go figure it out' builds.\n• For Interpersonal: Use role-play scenarios and 'walk-and-talk' reviews."
+                }
             };
 
-            // Prompts mapped to the new labels (Restored)
-            const promptsData = {
-                default: `
-                    <p class="text-sm text-gray-500">Click a learning style on the chart to see specific delivery prompts.</p>
-                    <div class="bg-gray-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-gray-800 font-medium">General Tip (from Alignment)</h4>
-                        <p class="text-xs text-gray-600">Your 'Visual' style is strong. Try to consciously add 'Kinaesthetic' (hands-on) activities to create balance for this group.</p>
-                    </div>
-                `,
-                'Interpersonal-Visual': `
-                    <div class="bg-blue-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-blue-800 font-medium">1. Use Storyboarding</h4>
-                        <p class="text-xs text-blue-700">Ask learners to create storyboards, sketchnotes, or mind-maps in groups.</p>
-                    </div>
-                    <div class="bg-blue-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-blue-800 font-medium">2. Create Group Visuals</h4>
-                        <p class="text-xs text-blue-700">Have them create poster pitches, vision boards, or infographics together.</p>
-                    </div>
-                `,
-                'Practical-Kinaesthetic': `
-                    <div class="bg-amber-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-amber-800 font-medium">1. Use Simulations</h4>
-                        <p class="text-xs text-amber-700">Use simulations, task stations, and learning labs.</p>
-                    </div>
-                    <div class="bg-amber-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-amber-800 font-medium">2. Project-Based Challenges</h4>
-                        <p class="text-xs text-amber-700">Set challenges like: 'Build a solution using X'.</css-atom-conditions>
-                    </div>
-                `,
-                'Intrapersonal-Kinesthetic': `
-                    <div class="bg-amber-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-amber-800 font-medium">1. Solo Challenge Kits</h4>
-                        <p class="text-xs text-amber-700">Offer solo task kits or 'go figure it out' builds.</p>
-                    </div>
-                    <div class="bg-amber-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-amber-800 font-medium">2. Challenge Labs</h4>
-                        <p class="text-xs text-amber-700">Provide a goal and materials, then let them solve it alone.</p>
-                    </div>
-                `,
-                'Interpersonal-Kinesthetic': `
-                    <div class="bg-amber-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-amber-800 font-medium">1. Role-Play Scenarios</h4>
-                        <p class="text-xs text-amber-700">Use role-play, physical simulations, and drama-based learning.</p>
-                    </div>
-                    <div class="bg-amber-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-amber-800 font-medium">2. 'Walk-and-Talk' Reviews</h4>
-                        <p class="text-xs text-amber-700">Incorporate props, movement breaks, or 'walk-and-talk' reviews.</p>
-                    </div>
-                `,
-                'Logical-Visual': `
-                    <div class="bg-blue-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-blue-800 font-medium">1. Use Concept Maps</h4>
-                        <p class="text-xs text-blue-700">Use concept maps, process flows, and matrix diagrams.</p>
-                    </div>
-                    <div class="bg-blue-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-blue-800 font-medium">2. Visual Hierarchies</h4>
-                        <p class="text-xs text-blue-700">Break complex systems into visual hierarchies (e.g., decision trees).</p>
-                    </div>
-                `,
-                'Intrapersonal-Visual': `
-                    <div class="bg-blue-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-blue-800 font-medium">1. Solo Visual Tasks</h4>
-                        <p class="text-xs text-blue-700">Assign solo decoding tasks: 'Interpret this diagram independently'.</p>
-                    </div>
-                    <div class="bg-blue-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-blue-800 font-medium">2. Self-Paced Study Maps</h4>
-                        <p class="text-xs text-blue-700">Encourage self-paced study maps and flowchart navigation.</p>
-                    </div>
-                `,
-                 'Logical-Reading/Writing': `
-                    <div class="bg-indigo-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-indigo-800 font-medium">1. Use Frameworks</h4>
-                        <p class="text-xs text-indigo-700">Use frameworks for logical development.</p>
-                    </div>
-                    <div class="bg-indigo-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-indigo-800 font-medium">2. Create Lists/Charts</h4>
-                        <p class="text-xs text-indigo-700">Have them write pros/cons lists, comparative charts, or structured arguments.</p>
-                    </div>
-                `,
-                'Practical-Visual': `
-                    <div class="bg-blue-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-blue-800 font-medium">1. Visual Walkthroughs</h4>
-                        <p class="text-xs text-blue-700">Use sequential visual walkthroughs (e.g., annotated screenshots).</p>
-                    </div>
-                    <div class="bg-blue-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-blue-800 font-medium">2. Embed Demos</h4>
-                        <p class="text-xs text-blue-700">Embed GIFs, screen recordings, or product demos.</p>
-                    </div>
-                `,
-                'Interpersonal-Auditory': `
-                    <div class="bg-teal-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-teal-800 font-medium">1. Dialogue-Rich Activities</h4>
-                        <p class="text-xs text-teal-700">Use think-pair-share, debates, and Socratic questioning.</p>
-                    </div>
-                    <div class="bg-teal-50 p-3 rounded-lg">
-                        <h4 class="text-sm text-teal-800 font-medium">2. Encourage 'Teach Backs'</h4>
-                        <p class="text-xs text-teal-700">Encourage learners to 'teach back' concepts in their own words.</p>
-                    </div>
-                `
-            };
+            // Placeholder text for the guidance panel
+            const guidancePlaceholder = `<p class="text-gray-400">Click a module above to see detailed guidance and specific prompts for that learner group.</p>`;
+            aiOutputText.innerHTML = guidancePlaceholder;
 
-            // Content Prompts Data (Restored)
+
+            // --- TYPEWRITER FUNCTION ---
+            function typeWriter(element, text, speed) {
+                // Clear any ongoing animation
+                if (currentTypewriterInterval) {
+                    clearInterval(currentTypewriterInterval);
+                }
+                
+                let i = 0;
+                // Replace newlines with <br> for HTML rendering
+                const htmlText = text.replace(/\n/g, '<br>');
+                element.innerHTML = ''; // Clear previous content
+                
+                // Create cursor and add it
+                const cursor = document.createElement('span');
+                cursor.className = 'typing-cursor';
+                element.appendChild(cursor);
+
+                currentTypewriterInterval = setInterval(() => {
+                    if (i < htmlText.length) {
+                        const char = htmlText.charAt(i);
+                        if (htmlText.slice(i).startsWith('<br>')) {
+                            element.insertBefore(document.createElement('br'), cursor);
+                            i += 4; // Skip '<br>'
+                        } else if (htmlText.slice(i).startsWith('•')) {
+                             // Add bullet points
+                            const li = document.createElement('li');
+                            li.className = 'ml-5 list-disc';
+                            // Find the end of the line
+                            const lineEnd = htmlText.indexOf('<br>', i) === -1 ? htmlText.length : htmlText.indexOf('<br>', i);
+                            li.textContent = htmlText.substring(i + 1, lineEnd).trim(); // +1 to skip '•'
+                            element.insertBefore(li, cursor);
+                            i = lineEnd;
+                        } else {
+                            element.insertBefore(document.createTextNode(char), cursor);
+                            i++;
+                        }
+                    } else {
+                        clearInterval(currentTypewriterInterval);
+                        currentTypewriterInterval = null;
+                        cursor.remove(); // Remove cursor when done
+                    }
+                }, speed);
+            }
+
+            // Default Prompts HTML for the *standalone* right panel
+            const alignmentPromptsHtml = `
+                <p class="text-sm text-gray-500">This panel shows high-level prompts based on your alignment score.</p>
+                <div class="bg-gray-50 p-3 rounded-lg">
+                    <h4 class="text-sm text-gray-800 font-medium">General Tip (from Alignment)</h4>
+                    <p class="text-xs text-gray-600">Your 'Visual' style is strong. Try to consciously add 'Kinaesthetic' (hands-on) activities to create balance for this group.</p>
+                </div>
+            `;
+            
+            // Set initial prompt for the standalone panel
+            promptsContent.innerHTML = alignmentPromptsHtml;
+
+            // Build VARK Modules
+            Object.keys(varkData).forEach(key => {
+                const data = varkData[key];
+                const moduleEl = document.createElement('div');
+                moduleEl.className = `vark-module bg-white p-6 rounded-lg shadow-sm cursor-pointer border-2 border-transparent hover:shadow-md`;
+                moduleEl.setAttribute('data-vark', key);
+                // --- UPDATED INNER HTML ---
+                moduleEl.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <div class="text-lg font-semibold text-gray-900">${data.label}</div>
+                            <div class="text-3xl font-bold text-gray-900 mt-2">${data.learners} <span class="text-2xl font-medium text-gray-500">Learners</span></div>
+                            <div class="text-sm font-medium text-${data.color}-600 mt-2">${data.helpText}</div>
+                        </div>
+                        ${data.icon}
+                    </div>
+                `;
+                
+                moduleEl.addEventListener('click', (e) => { 
+                    // Remove selected class from all modules
+                    varkContainer.querySelectorAll('.vark-module').forEach(el => {
+                        el.classList.remove('vark-module-selected');
+                    });
+                    
+                    if (selectedVarkModule === key) {
+                        // Deselect
+                        selectedVarkModule = null;
+                        if (currentTypewriterInterval) clearInterval(currentTypewriterInterval);
+                        aiOutputText.innerHTML = guidancePlaceholder; // Reset to placeholder
+
+                    } else {
+                        // Select
+                        selectedVarkModule = key;
+                        // Use event's currentTarget to apply class
+                        e.currentTarget.classList.add('vark-module-selected'); 
+                        
+                        // Show and populate deeper dive
+                        typeWriter(aiOutputText, data.aiResponseText, 15); // Start typing animation
+                    }
+                });
+                
+                varkContainer.appendChild(moduleEl);
+            });
+
+
+            // --- CONTENT VIEW SCRIPT ---
+            
             const contentPromptsData = {
                 'allModules': {
                     analysis: `
                         <div>
                             <h4 class="font-semibold text-green-700">Overall Strength</h4>
-                            <p class="text-sm text-gray-600">The content starts strong with a 'Visual' focus (Module 1), which aligns well with 42% of the group.</p>
+                            <p class="text-sm text-gray-600">The content starts strong with a 'Visual' focus (Module 1), which aligns well with 43% of the group ('See' learners).</p>
                         </div>
                         <div>
                             <h4 class="font-semibold text-red-700">Key Risk</h4>
-                            <p class="text-sm text-gray-600">The session becomes heavily text-based by Module 3, which will disengage the significant 'Kinaesthetic' (42%) and 'Interpersonal-Auditory' (7%) learners.</p>
+                            <p class="text-sm text-gray-600">The session becomes heavily text-based by Module 3, which will disengage the significant 'Kinaesthetic' (43%) and 'Auditory' (7%) learners.</p>
                         </div>
                         <div>
                             <h4 class="font-semibold text-blue-700">Highest-Impact Quick Win</h4>
-                            <p class="text-sm text-gray-600">Your main priority is to add a hands-on activity to Module 3. Converting the case study to a role-play is the most effective fix.</p>
+                            <p class="text-sm text-gray-600">Your main priority is to add a hands-on activity to Module 3. Converting the case study to a role-play is the most effective fix for 'Do' learners.</p>
                         </div>
                     `,
                     prompts: `
@@ -564,13 +611,13 @@
                             <span class="text-xs font-medium text-red-600">Top Priority (Module 3)</span>
                             <span class="block text-xs text-gray-500 font-medium">Timer Cue: 45 min mark</span>
                             <p class="text-sm text-gray-800 font-medium">Turn the case study into a live role-play.</p>
-                            <p class="text-xs text-gray-600">This will engage your 'Interpersonal-Kinaesthetic' and 'Practical-Kinaesthetic' learners.</p>
+                            <p class="text-xs text-gray-600">This will engage your 'Do (Kinaesthetic)' learners.</p>
                         </div>
                         <div class="bg-gray-50 p-3 rounded-lg">
                             <span class="text-xs font-medium text-teal-600">Suggestion (Module 2)</span>
                             <span class="block text-xs text-gray-500 font-medium">Timer Cue: 20 min mark</span>
                             <p class="text-sm text-gray-800 font-medium">Insert a 'Draw the Model' activity.</p>
-                            <p class="text-xs text-gray-600">Reinforces content for 'Logical-Visual' and 'Practical-Kinaesthetic' learners.</p>
+                            <p class="text-xs text-gray-600">Reinforces content for 'See (Visual)' and 'Do (Kinaesthetic)' learners.</p>
                         </div>
                     `
                 },
@@ -578,7 +625,7 @@
                     analysis: `
                         <div>
                             <h4 class="font-semibold text-green-700">Strengths</h4>
-                            <p class="text-sm text-gray-600">Module 1's video is a great opener for your 'Interpersonal-Visual' (21%) and 'Logical-Visual' (7%) learners.</p>
+                            <p class="text-sm text-gray-600">Module 1's video is a great opener for your 'See (Visual)' learners (43% of group).</p>
                         </div>
                         <div>
                             <h4 class="font-semibold text-gray-700">Risks</h4>
@@ -590,7 +637,7 @@
                             <span class="text-xs font-medium text-teal-600">Suggestion for Module 1</span>
                             <span class="block text-xs text-gray-500 font-medium">Timer Cue: 5 min mark</span>
                             <p class="text-sm text-gray-800 font-medium">Pause video for a quick 'what stood out?'</p>
-                            <p class="text-xs text-gray-600">This will engage 'Interpersonal-Auditory' learners early.</p>
+                            <p class="text-xs text-gray-600">This will engage 'Say (Auditory)' learners early.</p>
                         </div>
                     `
                 },
@@ -598,11 +645,11 @@
                     analysis: `
                         <div>
                             <h4 class="font-semibold text-amber-700">Risks</h4>
-                            <p class="text-sm text-gray-600">Slide-heavy content. Risk of disengaging 'Kinaesthetic' (42%) and 'Interpersonal-Auditory' (7%) learners.</p>
+                            <p class="text-sm text-gray-600">Slide-heavy content. Risk of disengaging 'Do (Kinaesthetic)' (43%) and 'Say (Auditory)' (7%) learners.</p>
                         </div>
                         <div>
                             <h4 class="font-semibold text-blue-700">Quick Wins</h4>
-                            <p class="text-sm text-gray-600">Break up slides with a 'Think-Pair-Share' to engage 'Interpersonal-Auditory' learners.</p>
+                            <p class="text-sm text-gray-600">Break up slides with a 'Think-Pair-Share' to engage 'Say (Auditory)' learners.</p>
                         </div>
                     `,
                     prompts: `
@@ -610,7 +657,7 @@
                             <span class="text-xs font-medium text-teal-600">Suggestion for Module 2</span>
                             <span class="block text-xs text-gray-500 font-medium">Timer Cue: 20 min mark</span>
                             <p class="text-sm text-gray-800 font-medium">Insert a 'Draw the Model' activity.</p>
-                            <p class="text-xs text-gray-600">After slide 10, ask learners to draw the 4-quadrant model. This reinforces for 'Logical-Visual' and 'Practical-Kinaesthetic' learners.</p>
+                            <p class="text-xs text-gray-600">After slide 10, ask learners to draw the 4-quadrant model. This reinforces for 'See (Visual)' and 'Do (Kinaesthetic)' learners.</p>
                         </div>
                         <div class="bg-gray-50 p-3 rounded-lg">
                             <span class="text-xs font-medium text-teal-600">Suggestion for Module 2</span>
@@ -624,11 +671,11 @@
                     analysis: `
                         <div>
                             <h4 class="font-semibold text-red-700">High Risk</h4>
-                            <p class="text-sm text-gray-600">Module 3 is text-only. This will strongly disengage your 'Kinaesthetic' learners (42%).</p>
+                            <p class="text-sm text-gray-600">Module 3 is text-only. This will strongly disengage your 'Do (Kinaesthetic)' learners (43%).</p>
                         </div>
                         <div>
                             <h4 class="font-semibold text-blue-700">Quick Wins</h4>
-                            <p class="text-sm text-gray-600">Must add a hands-on component. Role-play is the fastest way to engage 'Kinaesthetic' and 'Interpersonal' styles.</p>
+                            <p class="text-sm text-gray-600">Must add a hands-on component. Role-play is the fastest way to engage 'Do (Kinaesthetic)' learners.</p>
                         </div>
                     `,
                     prompts: `
@@ -636,200 +683,111 @@
                             <span class="text-xs font-medium text-red-600">Suggestion for Module 3</span>
                             <span class="block text-xs text-gray-500 font-medium">Timer Cue: 45 min mark</span>
                             <p class="text-sm text-gray-800 font-medium">Turn the case study into a live role-play.</p>
-                            <p class="text-xs text-gray-600">This will engage your 'Interpersonal-Kinaesthetic' and 'Practical-Kinaesthetic' learners.</p>
+                            <p class="text-xs text-gray-600">This will engage your 'Do (Kinaesthetic)' learners.</p>
                         </div>
                     `
                 }
             };
 
-            // Set initial prompt
-            promptsContent.innerHTML = promptsData.default;
-
-            // Content View Panels (Restored)
-            // ****** FIX STARTS HERE ******
-            // Added the 'id' attributes to the panel containers and fixed the JavaScript selectors
             const contentAnalysisPanel = document.getElementById('content-analysis-panel').querySelector('.scrollable-panel');
             const deliveryPromptsAytPanel = document.getElementById('delivery-prompts-ayt-panel').querySelector('.scrollable-panel');
-            // ****** FIX ENDS HERE ******
             
-            // Function to update content panels
             function updateContentPanels(moduleKey) {
-                const data = contentPromptsData[moduleKey] || contentPromptsData['allModules']; // Default to allModules
+                const data = contentPromptsData[moduleKey] || contentPromptsData['allModules'];
                 contentAnalysisPanel.innerHTML = data.analysis;
                 deliveryPromptsAytPanel.innerHTML = data.prompts;
             }
 
-            // Set initial content panel state
             updateContentPanels('allModules');
 
-            // Add click listener for module items
             const moduleItems = document.querySelectorAll('.module-item');
             moduleItems.forEach(item => {
                 item.addEventListener('click', () => {
-                    // Remove selected class from all
                     moduleItems.forEach(i => i.classList.remove('selected-module'));
-                    // Add selected class to clicked item
                     item.classList.add('selected-module');
-                    // Update panels
                     const moduleKey = item.getAttribute('data-module');
                     updateContentPanels(moduleKey);
                 });
             });
 
-            // Create Donut Chart
-            const ctxDonut = document.getElementById('learningStyleChart').getContext('2d');
-            const donutChart = new Chart(ctxDonut, {
-                type: 'doughnut',
-                data: chartData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '70%',
-                    plugins: {
-                        legend: {
-                            display: false // Disable default legend
+
+            // --- ENGAGEMENT CHART (Restored) ---
+            
+            // We still need Chart.js for this one chart.
+            if (document.getElementById('engagementChart')) {
+                const ctxLine = document.getElementById('engagementChart').getContext('2d');
+                const lineChart = new Chart(ctxLine, {
+                    type: 'line',
+                    data: {
+                        labels: ['1', '2', '3', '4', '5', '6', '7'],
+                        datasets: [{
+                            label: 'Engagement Score',
+                            data: [4.2, 3.2, 3.6, 3.8, 3.8, 4.1, 4.3],
+                            fill: true,
+                            backgroundColor: 'rgba(20, 184, 170, 0.1)',
+                            borderColor: '#0D9488', // teal-600
+                            tension: 0.3,
+                            pointBackgroundColor: '#0D9488',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#0D9488',
+                            pointHoverBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: 3,
+                                max: 5,
+                                grid: {
+                                    drawTicks: false
+                                },
+                                ticks: {
+                                    padding: 10,
+                                    font: { size: 10 },
+                                    stepSize: 1
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Sessions',
+                                    font: { size: 12, weight: 'medium' },
+                                    color: '#475569'
+                                },
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    padding: 10,
+                                    font: { size: 10 }
+                                }
+                            }
                         },
-                        tooltip: {
-                            enabled: true,
-                            backgroundColor: '#1f2937', // gray-800
-                            titleFont: { size: 14, weight: 'bold' },
-                            bodyFont: { size: 12 },
-                            padding: 12,
-                            cornerRadius: 6,
-                            displayColors: false,
-                            callbacks: {
-                                title: function(tooltipItems) {
-                                    return tooltipItems[0].label;
-                                },
-                                label: function(tooltipItem) {
-                                    const percentage = tooltipItem.raw.toFixed(0) + '%';
-                                    return ` ${percentage} of group`;
-                                },
-                                afterBody: function(tooltipItems) {
-                                    const learners = chartData.learners[tooltipItems[0].dataIndex];
-                                    return '\nLearners:\n' + learners.map(l => `• ${l}`).join('\n');
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                enabled: true,
+                                backgroundColor: '#1f2937', // gray-800
+                                titleFont: { size: 12, weight: 'bold' },
+                                bodyFont: { size: 12 },
+                                padding: 10,
+                                cornerRadius: 6,
+                                displayColors: false,
+                                callbacks: {
+                                    title: (tooltipItems) => `Session ${tooltipItems[0].label}`
                                 }
                             }
                         }
-                    },
-                    onClick: (event, elements) => {
-                        if (elements.length > 0) {
-                            const clickedIndex = elements[0].index;
-                            const style = chartData.labels[clickedIndex];
-                            
-                            if (selectedSegment === clickedIndex) {
-                                // Deselect
-                                promptsTitle.textContent = 'Delivery Prompts';
-                                promptsContent.innerHTML = promptsData.default;
-                                selectedSegment = null;
-                            } else {
-                                // Select
-                                promptsTitle.textContent = `Prompts for '${style}'`;
-                                promptsContent.innerHTML = promptsData[style] || promptsData.default;
-                                selectedSegment = clickedIndex;
-                            }
-                            donutChart.update(); // Redraw chart to show/hide highlight
-                        }
                     }
-                }
-            });
-
-            // Build Custom Legend
-            const legendContainer = document.getElementById('custom-legend-container');
-            chartData.labels.forEach((label, index) => {
-                const color = chartData.datasets[0].backgroundColor[index];
-                const count = chartData.counts[index];
-                const percentage = chartData.percentages[index];
-
-                const item = document.createElement('div');
-                item.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
-                item.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <span class="h-4 w-4 rounded-full" style="background-color: ${color}"></span>
-                        <span class="text-sm font-medium text-gray-700">${label}</span>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <span class="text-sm font-bold text-gray-800">${count}</span>
-                        <span class="text-sm text-gray-600 w-8 text-right">${percentage}</span>
-                    </div>
-                `;
-                legendContainer.appendChild(item);
-            });
-
-
-            // Create Line Chart
-            const ctxLine = document.getElementById('engagementChart').getContext('2d');
-            const lineChart = new Chart(ctxLine, {
-                type: 'line',
-                data: {
-                    labels: ['1', '2', '3', '4', '5', '6', '7'],
-                    datasets: [{
-                        label: 'Engagement Score',
-                        data: [4.2, 3.2, 3.6, 3.8, 3.8, 4.1, 4.3],
-                        fill: true,
-                        backgroundColor: 'rgba(20, 184, 170, 0.1)',
-                        borderColor: '#0D9488', // teal-600
-                        tension: 0.3,
-                        pointBackgroundColor: '#0D9488',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: '#0D9488',
-                        pointHoverBorderWidth: 2,
-                        pointRadius: 4,
-                        pointHoverRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            min: 3,
-                            max: 5,
-                            grid: {
-                                drawTicks: false
-                            },
-                            ticks: {
-                                padding: 10,
-                                font: { size: 10 },
-                                stepSize: 1
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Sessions',
-                                font: { size: 12, weight: 'medium' },
-                                color: '#475569'
-                            },
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                padding: 10,
-                                font: { size: 10 }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            enabled: true,
-                            backgroundColor: '#1f2937', // gray-800
-                            titleFont: { size: 12, weight: 'bold' },
-                            bodyFont: { size: 12 },
-                            padding: 10,
-                            cornerRadius: 6,
-                            displayColors: false,
-                            callbacks: {
-                                title: (tooltipItems) => `Session ${tooltipItems[0].label}`
-                            }
-                        }
-                    }
-                }
-            });
+                });
+            }
 
         });
     </script>
