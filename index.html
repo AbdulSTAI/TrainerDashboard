@@ -125,6 +125,29 @@
                     </button>
                 </div>
 
+                <!-- NEW: Group Selector -->
+                <div class="relative mb-6">
+                    <button id="group-selector-button" class="flex items-center justify-between w-full max-w-sm px-4 py-3 bg-white rounded-lg shadow-sm text-left ring-1 ring-gray-200 hover:ring-teal-500 transition-all">
+                        <span class="flex items-center gap-3">
+                            <svg class="h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.94-3.197m-12 3.197a5.971 5.971 0 01.94-3.197m0 0A5.995 5.995 0 0112 12.75a5.995 5.995 0 015.06-2.772m-5.06 0A5.971 5.971 0 0012 6.75a5.971 5.971 0 00-5.06 2.772m10.12 0a5.973 5.973 0 01-.94 3.197M12 6.75a5.971 5.971 0 015.06 2.772m0 0a5.973 5.973 0 00.94 3.197M12 6.75a5.971 5.971 0 00-5.06 2.772m0 0a5.973 5.973 0 01-.94 3.197" />
+                            </svg>
+                            <span id="current-group-name" class="text-lg font-medium text-gray-800">Client Team Alpha</span>
+                        </span>
+                        <svg class="h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    
+                    <div id="group-selector-menu" class="absolute left-0 mt-2 w-full max-w-sm bg-white rounded-lg shadow-xl overflow-hidden z-10 hidden border border-gray-200">
+                        <ul>
+                            <li><a href="#" class="group-option block px-4 py-3 text-gray-700 hover:bg-teal-50" data-group-name="Client Team Alpha">Client Team Alpha (14 Learners)</a></li>
+                            <li><a href="#" class="group-option block px-4 py-3 text-gray-700 hover:bg-teal-50" data-group-name="Internal Team Beta">Internal Team Beta (8 Learners)</a></li>
+                            <li><a href="#" class="group-option block px-4 py-3 text-gray-700 hover:bg-teal-50" data-group-name="Assessors Group">Assessors Group (22 Learners)</a></li>
+                        </ul>
+                    </div>
+                </div>
+
                 <!-- Toggle Switch -->
                 <div class="flex justify-center mb-6">
                     <div class="flex p-1 bg-gray-100 rounded-lg">
@@ -410,15 +433,62 @@
                 }
             });
 
+            // --- NEW: Group Selector Dropdown ---
+            const groupSelectorButton = document.getElementById('group-selector-button');
+            const groupSelectorMenu = document.getElementById('group-selector-menu');
+            const currentGroupName = document.getElementById('current-group-name');
+            const varkContainer = document.getElementById('vark-container');
+            const aiOutputText = document.getElementById('ai-output-text');
+            let selectedVarkModule = null;
+
+            // Placeholder text for the guidance panel
+            const guidancePlaceholder = `<p class="text-gray-400">Click a module above to see detailed guidance and specific prompts for that learner group.</p>`;
+
+            if (groupSelectorButton) {
+                groupSelectorButton.addEventListener('click', () => {
+                    groupSelectorMenu.classList.toggle('hidden');
+                });
+
+                // Add click listeners to options
+                document.querySelectorAll('.group-option').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.preventDefault(); // Stop link navigation
+                        const newName = e.target.getAttribute('data-group-name');
+                        currentGroupName.textContent = newName; // Update button text
+                        groupSelectorMenu.classList.add('hidden'); // Close menu
+
+                        // --- Reset the view on group change ---
+                        // In a real app, you'd fetch new data. Here we reset.
+                        if (selectedVarkModule) {
+                            const selectedModule = varkContainer.querySelector('.vark-module-selected');
+                            if(selectedModule) {
+                                selectedModule.classList.remove('vark-module-selected');
+                            }
+                            selectedVarkModule = null;
+                        }
+                        aiOutputText.innerHTML = guidancePlaceholder;
+                        // We would also update all other panels (VARK, alignment, etc.) with new data
+                    });
+                });
+
+                // Close dropdown if clicking outside
+                window.addEventListener('click', (e) => {
+                    // Check if the click is outside the button AND outside the menu
+                    if (groupSelectorButton && !groupSelectorButton.contains(e.target) && groupSelectorMenu && !groupSelectorMenu.contains(e.target)) {
+                        groupSelectorMenu.classList.add('hidden');
+                    }
+                });
+            }
+
+
             // --- GROUP VIEW SCRIPT ---
 
             const promptsTitle = document.getElementById('delivery-prompts-title');
             const promptsContent = document.getElementById('delivery-prompts-content');
-            const varkContainer = document.getElementById('vark-container');
+            
             // --- UPDATED IDs ---
             const detailedGuidanceContainer = document.getElementById('detailed-guidance-container');
-            const aiOutputText = document.getElementById('ai-output-text');
-            let selectedVarkModule = null;
+            
             let currentTypewriterInterval = null; // To stop previous animation
 
             // This new data structure aggregates the 9 styles into 4 VARK categories
@@ -481,11 +551,6 @@
                     aiResponseText: "This is a key group: 43% (6 learners) are 'Do' learners.\n\nHere's the deeper dive:\n• Practical-Kinaesthetic: 3 learners\n• Intrapersonal-Kinesthetic: 2 learners\n• Interpersonal-Kinesthetic: 1 learner\n\nSuggested prompts to engage them:\n• For Practical: Use simulations, task stations, and learning labs.\n• For Intrapersonal: Offer solo challenge kits or 'go figure it out' builds.\n• For Interpersonal: Use role-play scenarios and 'walk-and-talk' reviews."
                 }
             };
-
-            // Placeholder text for the guidance panel
-            const guidancePlaceholder = `<p class="text-gray-400">Click a module above to see detailed guidance and specific prompts for that learner group.</p>`;
-            aiOutputText.innerHTML = guidancePlaceholder;
-
 
             // --- TYPEWRITER FUNCTION ---
             function typeWriter(element, text, speed) {
