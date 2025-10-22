@@ -3,215 +3,836 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Trainer Dashboard - Mock-up</title>
+    <title>Smart-Training AI Dashboard</title>
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Load Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <!-- Custom Styles -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
         }
-        .sidebar {
-            background-color: #ffffff;
-            border-right: 1px solid #e2e8f0;
+        /* Custom scrollbar for the side panels */
+        .scrollable-panel::-webkit-scrollbar {
+            width: 6px;
         }
-        .main-content {
-            background-color: #f1f5f9;
+        .scrollable-panel::-webkit-scrollbar-track {
+            background: #f1f5f9; /* gray-100 */
+            border-radius: 10px;
         }
-        .card {
-            background-color: #ffffff;
-            border-radius: 0.75rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
-            transition: all 0.2s ease-in-out;
+        .scrollable-panel::-webkit-scrollbar-thumb {
+            background: #cbd5e1; /* gray-300 */
+            border-radius: 10px;
         }
-        .card:hover {
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            border-color: #cbd5e1;
+        .scrollable-panel::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; /* gray-400 */
         }
-        .primary-btn {
-            background-color: #14b8a6;
+        /* Style for the toggle switch */
+        .toggle-active {
+            background-color: #14b8a6; /* teal-500 */
             color: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
         }
-        .primary-btn:hover {
-            background-color: #0d9488;
+        .toggle-inactive {
+            background-color: #f1f5f9; /* gray-100 */
+            color: #475569; /* gray-600 */
         }
-        .nav-item-active {
-            background-color: #f1f5f9;
-            color: #14b8a6;
-            font-weight: 600;
-        }
-        .nav-item-active svg {
-             color: #14b8a6;
-        }
-        .modal-backdrop {
-            background-color: rgba(15, 23, 42, 0.5);
-            transition: opacity 0.3s ease;
-        }
-        .modal-content {
-            transition: all 0.3s ease;
+        /* Style for selected content module */
+        .selected-module {
+            background-color: #ccfbf1; /* teal-100 */
         }
     </style>
 </head>
-<body class="flex h-screen">
+<body class="bg-gray-100 antialiased">
 
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar w-64 flex-shrink-0 flex flex-col">
-        <div class="p-4 border-b border-gray-200">
-            <img src="https://smart-trainingai.com/wp-content/uploads/2024/05/smart-training-ai-logo-main.png" alt="Smart Training AI Logo" class="h-8 w-auto">
-        </div>
-        <nav class="flex-grow p-2">
-            <ul class="space-y-1">
-                <li>
-                    <a href="#" class="nav-item-active flex items-center px-3 py-2.5 text-sm rounded-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                        Dashboard
-                    </a>
-                </li>
-                <li><a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>Assessments</a></li>
-                <li><a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Groups</a></li>
-                <li><a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Courses</a></li>
-                <li><a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"/></svg>Invite Links</a></li>
-            </ul>
-        </nav>
-        <div class="p-2 mt-auto border-t border-gray-200">
-             <ul class="space-y-1">
-                <li><a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Help</a></li>
-                <li><a href="#" class="flex items-center px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88Z"/><path d="M18 2v6h6"/><path d="m15.5 13.5-3 3-3-3"/></svg>Sign Out</a></li>
-            </ul>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main-content flex-1 p-8 overflow-y-auto">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-800">Welcome back, Trainer</h1>
-                    <p class="text-gray-500 mt-1">Here's what's happening with your learners and courses today.</p>
+    <!-- Main container -->
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- 1. Left Navigation (Mock-up based on screenshots) -->
+        <nav class="w-64 flex-shrink-0 bg-white border-r border-gray-200 hidden md:flex flex-col">
+            <div class="flex items-center justify-center h-16 border-b border-gray-200 px-4">
+                <!-- Logo -->
+                <svg class="h-8 w-auto" viewBox="0 0 200 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <text x="0" y="30" font-family="Inter, sans-serif" font-size="24" font-weight="bold" fill="#334155">SMART-</text>
+                    <text x="105" y="30" font-family="Inter, sans-serif" font-size="24" font-weight="bold" fill="#00A99D">TRAINING</text>
+                    <text x="175" y="15" font-family="Inter, sans-serif" font-size="10" font-weight="bold" fill="#00A99D">AI</text>
+                </svg>
+            </div>
+            <div class="flex-1 overflow-y-auto">
+                <ul class="py-4">
+                    <li class="px-4 py-2 text-sm font-medium text-gray-900 bg-gray-100 border-l-4 border-teal-500">Dashboard</li>
+                    <li class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">Assessments</li>
+                    <li class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">Groups</li>
+                    <li class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">Courses</li>
+                    <li class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">Invite Links</li>
+                    <li class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">Settings</li>
+                    <li class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50">Help</li>
+                </ul>
+            </div>
+            <div class="p-4 border-t border-gray-200">
+                <div class="flex items-center">
+                    <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-teal-600 text-white font-medium">A</span>
+                    <span class="ml-3 text-sm font-medium text-gray-800">Abdul</span>
                 </div>
-                <button id="qrBtn" class="primary-btn font-semibold px-5 py-3 rounded-lg flex items-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 12h10"/><path d="M12 7v10"/></svg>
-                    <span>Start Live Session / Generate QR Code</span>
-                </button>
             </div>
+        </nav>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="card p-5"><h3 class="text-sm font-medium text-gray-500">LSA Credits</h3><p class="text-3xl font-bold text-gray-800 mt-1">11</p><p class="text-xs text-gray-400 mt-1">Learner assessment credits.</p></div>
-                <div class="card p-5"><h3 class="text-sm font-medium text-gray-500">Course Builder Credits</h3><p class="text-3xl font-bold text-gray-800 mt-1">9</p><p class="text-xs text-gray-400 mt-1">AI course adaptation credits.</p></div>
-                <div class="card p-5 col-span-1 md:col-span-2"><h3 class="text-sm font-medium text-gray-500">Assessments This Week</h3><p class="text-3xl font-bold text-gray-800 mt-1">14</p><p class="text-xs text-green-500 mt-1">+5 since yesterday</p></div>
-            </div>
+        <!-- 2. Main Content Area -->
+        <main class="flex-1 overflow-y-auto">
+            <div class="p-6 md:p-8">
+                
+                <!-- Dashboard Header -->
+                <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">Welcome back, Trainer</h1>
+                        <p class="text-gray-600">Here's what's happening with your learners and courses today.</p>
+                    </div>
+                    <button id="qr-button" class="flex items-center justify-center gap-2 px-4 py-2 bg-teal-500 text-white font-medium rounded-lg shadow-sm hover:bg-teal-600 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2V5h1v1H5zM3 10a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zm2 2v-1h1v1H5zM10 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1V4zm2 2V5h1v1h-1zM10 10a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3zm2 2v-1h1v1h-1z" clip-rule="evenodd" />
+                        </svg>
+                        Start Live Session / Generate QR Code
+                    </button>
+                </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="card lg:col-span-2 p-6">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Recent Activity</h2>
-                    <p class="text-sm text-gray-500 mb-6">New learner assessments are ready for review. Prepare for your next session.</p>
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between p-3 bg-teal-50 rounded-lg border border-teal-200"><div class="flex items-center"><img src="https://placehold.co/40x40/E6F6F5/14B8A6?text=LA" alt="Learner A" class="rounded-full mr-4"><div><p class="font-medium text-gray-800">Learner A completed their LSA</p><p class="text-xs text-gray-500">Added to 'Client Team Alpha' group &middot; 2 hours ago</p></div></div><button class="view-results-btn text-sm font-semibold text-teal-600 hover:text-teal-800">View Results &rarr;</button></div>
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border"><div class="flex items-center"><img src="https://placehold.co/40x40/F3F4F6/6B7280?text=LB" alt="Learner B" class="rounded-full mr-4"><div><p class="font-medium text-gray-800">Learner B completed their LSA</p><p class="text-xs text-gray-500">Added to 'Internal Team Beta' group &middot; 1 day ago</p></div></div><button class="view-results-btn text-sm font-semibold text-gray-600 hover:text-gray-800">View Results &rarr;</button></div>
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border"><div class="flex items-center"><img src="https://placehold.co/40x40/F3F4F6/6B7280?text=LC" alt="Learner C" class="rounded-full mr-4"><div><p class="font-medium text-gray-800">Learner C completed their LSA</p><p class="text-xs text-gray-500">Added to 'Client Team Alpha' group &middot; 3 days ago</p></div></div><button class="view-results-btn text-sm font-semibold text-gray-600 hover:text-gray-800">View Results &rarr;</button></div>
+                <!-- Toggle Switch -->
+                <div class="flex justify-center mb-6">
+                    <div class="flex p-1 bg-gray-100 rounded-lg">
+                        <button id="group-view-btn" class="toggle-active px-6 py-2 text-sm font-medium rounded-md transition-all">Group View</button>
+                        <button id="content-view-btn" class="toggle-inactive px-6 py-2 text-sm font-medium rounded-md transition-all">Content View</button>
                     </div>
                 </div>
 
-                <div class="space-y-8">
-                    <div class="card p-6"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-semibold text-gray-800">Your Groups</h2><button class="text-sm primary-btn font-medium px-3 py-1 rounded-md hover:shadow-sm">+ New Group</button></div><ul class="divide-y divide-gray-200"><li class="py-3 flex justify-between items-center"><div><p class="font-medium text-gray-800">Client Team Alpha</p><p class="text-xs text-gray-500">Last activity: 2 hours ago</p></div><span class="text-xs font-semibold text-gray-500">14 Learners</span></li><li class="py-3 flex justify-between items-center"><div><p class="font-medium text-gray-800">Internal Team Beta</p><p class="text-xs text-gray-500">Last activity: 1 day ago</p></div><span class="text-xs font-semibold text-gray-500">8 Learners</span></li><li class="py-3 flex justify-between items-center"><div><p class="font-medium text-gray-800">Assessors Group</p><p class="text-xs text-gray-500">Last activity: 3 days ago</p></div><span class="text-xs font-semibold text-gray-500">22 Learners</span></li></ul><a href="#" class="block text-center mt-4 text-sm font-semibold text-teal-600 hover:text-teal-800">View All Groups &rarr;</a></div>
-                    <div class="card p-6"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-semibold text-gray-800">Your Courses</h2><button class="text-sm primary-btn font-medium px-3 py-1 rounded-md hover:shadow-sm">+ New Course</button></div><ul class="divide-y divide-gray-200"><li class="py-3"><p class="font-medium text-gray-800">Adapting to Kinesthetic Learners</p><p class="text-xs text-gray-500">Last updated: 5 days ago</p></li><li class="py-3"><p class="font-medium text-gray-800">Introduction to STAI</p><p class="text-xs text-gray-500">Last updated: 2 weeks ago</p></li></ul><a href="#" class="block text-center mt-4 text-sm font-semibold text-teal-600 hover:text-teal-800">View All Courses &rarr;</a></div>
+                <!-- Container for the two views -->
+                <div>
+                    <!-- 3. PAGE 1: GROUP VIEW -->
+                    <div id="group-view">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            
+                            <!-- Left Column: Donut Chart & Custom Legend -->
+                            <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-sm">
+                                <h2 class="text-lg font-semibold text-gray-900 mb-4">Learning Style Distribution</h2>
+                                <!-- Chart Container -->
+                                <div class="relative h-[400px] w-[400px] mx-auto">
+                                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
+                                        <span class="text-5xl font-bold text-gray-800">14</span>
+                                        <span class="block text-lg text-gray-600">Learners</span>
+                                    </div>
+                                    <canvas id="learningStyleChart"></canvas>
+                                </div>
+                                <!-- Custom Legend Container -->
+                                <div id="custom-legend-container" class="mt-6 space-y-3">
+                                    <!-- Legend items will be injected here by JS -->
+                                </div>
+                            </div>
+                            
+                            <!-- Right Column: Scrollable Panels -->
+                            <div class="lg:col-span-1 flex flex-col gap-6">
+                                
+                                <!-- Panel 1: Alignment -->
+                                <div class="bg-white p-5 rounded-lg shadow-sm">
+                                    <h3 class="text-md font-semibold text-gray-900 mb-4">Trainer vs. Group Alignment</h3>
+                                    <div class="space-y-3">
+                                        <div class="text-center">
+                                            <div class="text-5xl font-bold text-amber-600">65%</div>
+                                            <div class="text-sm font-medium text-amber-700">Alignment (Amber)</div>
+                                            <p class="text-xs text-gray-500 mt-1">Score reflects the gap between your 'Visual' style and the group's 'Kinaesthetic' (42%) preference.</p>
+                                        </div>
+                                        <p class="text-xs text-amber-700 bg-amber-50 p-2 rounded-md mt-3">
+                                            <span class="font-bold">Gap Identified:</span> You over-index on 'Visual'. Your group has a significant 'Kinaesthetic' (42%) component. See prompts to balance.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Panel 2: Delivery Prompts (Scrollable) -->
+                                <div id="delivery-prompts-panel" class="bg-white p-5 rounded-lg shadow-sm h-64 flex flex-col">
+                                    <h3 id="delivery-prompts-title" class="text-md font-semibold text-gray-900 mb-4 flex-shrink-0">Delivery Prompts</h3>
+                                    <div id="delivery-prompts-content" class="scrollable-panel flex-1 overflow-y-auto pr-2 space-y-3">
+                                        <!-- Content is injected by JS -->
+                                    </div>
+                                </div>
+
+                                <!-- Panel 2.5: Suggested Group Pairings (Scrollable) -->
+                                <div class="bg-white p-5 rounded-lg shadow-sm h-48 flex flex-col">
+                                    <h3 class="text-md font-semibold text-gray-900 mb-4 flex-shrink-0">Suggested Group Pairings</h3>
+                                    <div class="scrollable-panel flex-1 overflow-y-auto pr-2 space-y-4">
+                                        <!-- Pairing 1 -->
+                                        <div class="bg-gray-50 p-3 rounded-lg">
+                                            <h4 class="text-sm text-gray-800 font-medium">Group 1 (Kinaesthetic Focus)</h4>
+                                            <p class="text-xs text-gray-600">Good for hands-on tasks & simulations.</p>
+                                            <ul class="mt-2 text-xs list-disc list-inside text-gray-600">
+                                                <li>Will Rankin (Practical-Kin.)</li>
+                                                <li>Allan (Practical-Kin.)</li>
+                                                <li>Abdul (Practical-Kin.)</li>
+                                                <li>Will The Kid (Intrapersonal-Kin.)</li>
+                                                <li>Learner I (Interpersonal-Kin.)</li>
+                                            </ul>
+                                        </div>
+                                        <!-- Pairing 2 -->
+                                        <div class="bg-gray-50 p-3 rounded-lg">
+                                            <h4 class="text-sm text-gray-800 font-medium">Group 2 (Visual Focus)</h4>
+                                            <p class="text-xs text-gray-600">Good for mind-mapping & design tasks.</p>
+                                            <ul class="mt-2 text-xs list-disc list-inside text-gray-600">
+                                                <li>Waad (Interpersonal-Vis.)</li>
+                                                <li>Ghadeer (Interpersonal-Vis.)</li>
+                                                <li>Learner E (Intrapersonal-Vis.)</li>
+                                                <li>Shahad Alangari (Practical-Vis.)</li>
+                                                <li>M (Logical-Vis.)</li>
+                                            </ul>
+                                        </div>
+                                        <!-- Pairing 3 -->
+                                        <div class="bg-gray-50 p-3 rounded-lg">
+                                            <h4 class="text-sm text-gray-800 font-medium">Group 3 (Solo/Mixed Focus)</h4>
+                                            <p class="text-xs text-gray-600">Good for self-directed research & writing.</p>
+                                            <ul class="mt-2 text-xs list-disc list-inside text-gray-600">
+                                                <li>Lama (Logical-R/W)</li>
+                                                <li>Danah Alnamlah (Interpersonal-Aud.)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Panel 3: Engagement Over Time (Scrollable) -->
+                                <div class="bg-white p-5 rounded-lg shadow-sm h-64 flex flex-col">
+                                    <h3 class="text-md font-semibold text-gray-900 mb-4 flex-shrink-0">Engagement Over Time</h3>
+                                    <div class="scrollable-panel flex-1 overflow-y-auto pr-2 h-full w-full">
+                                        <!-- Line Chart Placeholder -->
+                                        <canvas id="engagementChart"></canvas>
+                                    </div>
+                                </div>
+
+                                <!-- Panel 4: Low Engagement (Scrollable) -->
+                                <div class="bg-white p-5 rounded-lg shadow-sm h-48 flex flex-col">
+                                    <h3 class="text-md font-semibold text-gray-900 mb-4 flex-shrink-0">Low Engagement</h3>
+                                    <div class="scrollable-panel flex-1 overflow-y-auto pr-2 space-y-3">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-700">Lama</span>
+                                            <button class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full">Nudge</button>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-700">M</span>
+                                            <button class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full">Nudge</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Panel 5: Export Report Button (Restored) -->
+                                <div class="bg-white p-5 rounded-lg shadow-sm">
+                                    <button class="flex w-full items-center justify-center gap-2 px-4 py-2 bg-white text-gray-700 font-medium border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                          <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 10-2 0v3a1 1 0 102 0v-3zm2-3a1 1 0 011 1v5a1 1 0 11-2 0V9a1 1 0 011-1zm4-1a1 1 0 10-2 0v7a1 1 0 102 0V8z" clip-rule="evenodd" />
+                                        </svg>
+                                        Export Group Report
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. PAGE 2: CONTENT VIEW -->
+                    <div id="content-view" class="hidden">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            
+                            <!-- Left Column: Content -->
+                            <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-sm">
+                                <div class="flex flex-col md:flex-row justify-between md:items-start mb-4">
+                                    <div>
+                                        <h2 class="text-lg font-semibold text-gray-900">Content Analysis</h2>
+                                        <p class="text-sm text-gray-600">Based on "Leadership Skills - Cohort A" content.</p>
+                                    </div>
+                                    <div class="text-right mt-4 md:mt-0">
+                                        <div class="text-sm font-medium text-gray-600">Readiness Score</div>
+                                        <div class="text-3xl font-bold text-teal-600">82%</div>
+                                        <span class="text-xs font-medium bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full">Good to Go</span>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="flex flex-col sm:flex-row gap-3 mb-6 pt-4 border-t border-gray-200">
+                                    <button class="flex items-center justify-center gap-2 px-4 py-2 bg-teal-500 text-white font-medium rounded-lg shadow-sm hover:bg-teal-600 transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                          <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                        </svg>
+                                        Upload Content (Slides/Outline)
+                                    </button>
+                                </div>
+                                
+                                <ul id="content-module-list" class="space-y-3 mt-6">
+                                    <!-- "All Modules" Button -->
+                                    <li data-module="allModules" class="module-item flex items-center gap-4 p-3 rounded-lg cursor-pointer hover:bg-teal-50 selected-module">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                                        </svg>
+                                        <span class="text-sm font-medium text-gray-800 flex-1">All Modules (Summary)</span>
+                                        <span class="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full">Default</span>
+                                    </li>
+                                    <!-- Module 1 -->
+                                    <li data-module="module1" class="module-item flex items-center gap-4 p-3 rounded-lg cursor-pointer hover:bg-teal-50">
+                                        <svg class="h-6 w-6 text-blue-500 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.5-2.5m2.5 2.5l-2.5 2.5M15.042 21.672L13.684 16.6m0 0l-2.5-2.5m2.5 2.5l-2.5 2.5M15.042 21.672L13.684 16.6m0 0l-2.5-2.5m2.5 2.5l-2.5 2.5M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+                                        <span class="text-sm font-medium text-gray-800 flex-1">Module 1: Introduction (Video)</span>
+                                        <span class="text-xs font-medium bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Strong</span>
+                                    </li>
+                                    <!-- Module 2 -->
+                                    <li data-module="module2" class="module-item flex items-center gap-4 p-3 rounded-lg cursor-pointer hover:bg-teal-50">
+                                        <svg class="h-6 w-6 text-amber-500 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 6.108v9.782c0 .414.336.75.75.75h3.75a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 6.108v9.782c0 .414.336.75.75.75h3.75a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08" /></svg>
+                                        <span class="text-sm font-medium text-gray-800 flex-1">Module 2: Core Concepts (Slides)</span>
+                                        <span class="text-xs font-medium bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Risk</span>
+                                    </li>
+                                    <li data-module="module3" class="module-item flex items-center gap-4 p-3 rounded-lg cursor-pointer hover:bg-teal-50">
+                                        <svg class="h-6 w-6 text-red-500 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                                        <span class="text-sm font-medium text-gray-800 flex-1">Module 3: Case Study (Text)</span>
+                                        <span class="text-xs font-medium bg-red-100 text-red-700 px-2 py-0.5 rounded-full">High Risk</span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                            
+                            <!-- Right Column: Scrollable Panels (Restored) -->
+                            <div class="lg:col-span-1 flex flex-col gap-6">
+                                
+                                <!-- Panel 1: Content Analysis (Scrollable) -->
+                                <div id="content-analysis-panel" class="bg-white p-5 rounded-lg shadow-sm h-64 flex flex-col">
+                                    <h3 class="text-md font-semibold text-gray-900 mb-4 flex-shrink-0">Content Analysis</h3>
+                                    <div class="scrollable-panel flex-1 overflow-y-auto pr-2 space-y-4">
+                                        <!-- Content injected by JS -->
+                                    </div>
+                                </div>
+
+                                <!-- Panel 2: Delivery Prompts (AYT) (Scrollable) -->
+                                <div id="delivery-prompts-ayt-panel" class="bg-white p-5 rounded-lg shadow-sm h-64 flex flex-col">
+                                    <h3 class="text-md font-semibold text-gray-900 mb-4 flex-shrink-0">Delivery Prompts (AYT)</h3>
+                                    <div class="scrollable-panel flex-1 overflow-y-auto pr-2 space-y-3">
+                                        <!-- Content injected by JS -->
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
-    <!-- QR Code Modal -->
-    <div id="qrModal" class="fixed inset-0 z-50 modal-backdrop opacity-0 items-center justify-center hidden" onclick="closeModal('qrModal')">
-        <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-md m-4 transform scale-95" onclick="event.stopPropagation()">
-            <div class="p-6 border-b"><h2 class="text-xl font-semibold">Start Live Session</h2><p class="text-sm text-gray-500 mt-1">Use your mobile device to scan the code and launch the simplified in-session view.</p></div>
-            <div class="p-8 text-center"><div class="w-64 h-64 bg-gray-200 mx-auto flex items-center justify-center rounded-lg"><span class="text-gray-500">QR Code Placeholder</span></div></div>
-            <div class="px-6 py-4 bg-gray-50 rounded-b-lg text-right"><button onclick="closeModal('qrModal')" class="font-semibold text-gray-600 hover:text-gray-800 px-4 py-2 rounded-md">Close</button></div>
+    <!-- 5. QR Code Modal (Hidden by default) -->
+    <div id="qr-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full relative">
+            <!-- Close Button -->
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            
+            <h2 class="text-xl font-semibold text-gray-900 text-center">Start Live Session</h2>
+            <p class="text-center text-gray-600 mt-2">Ask your learners to scan the code to join the session and start the pre-session check-in.</p>
+            
+            <!-- QR Code Placeholder -->
+            <div class="flex justify-center my-6">
+                <img src="https://placehold.co/256x256/00A99D/FFFFFF?text=QR+CODE" alt="QR Code" class="rounded-lg border-4 border-gray-200">
+            </div>
+            
+            <p class="text-center text-sm font-medium text-gray-700">Waiting for learners... <span class="font-bold text-teal-600">(0/14 joined)</span></p>
         </div>
     </div>
-    
-    <!-- Results Modal -->
-    <div id="resultsModal" class="fixed inset-0 z-50 modal-backdrop opacity-0 items-center justify-center hidden" onclick="closeModal('resultsModal')">
-        <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-3xl m-4 transform scale-95" onclick="event.stopPropagation()">
-             <div class="flex justify-between items-center p-4 border-b">
-                <h2 class="text-xl font-semibold text-gray-800">Group Learning Style Report</h2>
-                <button onclick="closeModal('resultsModal')" class="text-gray-400 hover:text-gray-600 text-2xl font-bold">&times;</button>
-            </div>
-            <div class="p-6 overflow-y-auto" style="max-height: 70vh;">
-                <h3 class="font-semibold text-gray-800">Group Composition Summary: Client Team Alpha</h3>
-                <p class="text-sm text-gray-500 mb-4">The selected group is made up of the following learning styles:</p>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm mb-6">
-                    <div><span class="font-medium">Expressive-Visual:</span> 21.4%</div>
-                    <div><span class="font-medium">Practical-Kinesthetic:</span> 21.4%</div>
-                    <div><span class="font-medium">Ind-Analytical-Kinesthetic:</span> 14.3%</div>
-                    <div><span class="font-medium">Expressive-Kinesthetic:</span> 7.1%</div>
-                    <div><span class="font-medium">Logical-Visual:</span> 7.1%</div>
-                    <div><span class="font-medium">Practical-Visual:</span> 7.1%</div>
-                </div>
 
-                <div class="bg-gray-50 p-4 rounded-lg">
-                    <h4 class="font-semibold text-gray-800">Recommendations for Whole Group</h4>
-                    <ul class="list-disc list-inside text-sm text-gray-700 mt-2 space-y-1">
-                        <li>Incorporate hands-on activities and real-world applications to engage kinesthetic learners.</li>
-                        <li>Utilize visual aids such as diagrams and flowcharts to support visual learners.</li>
-                        <li>Incorporate collaborative and discussion-based sessions for expressive learners.</li>
-                    </ul>
-                </div>
-
-                <h4 class="font-semibold text-gray-800 mt-6 mb-2">Adapting for Individual Styles</h4>
-                <div class="text-sm text-gray-700 space-y-3">
-                    <p><strong>Expressive-Visual (Learners B, D, E):</strong> Use lively visuals, group activities, and interactive discussions.</p>
-                    <p><strong>Practical-Kinesthetic (Learners A, C, F):</strong> Engage learners with practical exercises that require physical activity.</p>
-                </div>
-            </div>
-             <div class="px-6 py-4 bg-gray-50 rounded-b-lg text-right"><button onclick="closeModal('resultsModal')" class="font-semibold text-gray-600 hover:text-gray-800 px-4 py-2 rounded-md">Close</button></div>
-        </div>
-    </div>
-
+    <!-- JavaScript -->
     <script>
-        // Modal Handling
-        const qrBtn = document.getElementById('qrBtn');
-        const viewResultsBtns = document.querySelectorAll('.view-results-btn');
+        document.addEventListener('DOMContentLoaded', () => {
+            // View Toggling
+            const groupViewBtn = document.getElementById('group-view-btn');
+            const contentViewBtn = document.getElementById('content-view-btn');
+            const groupView = document.getElementById('group-view');
+            const contentView = document.getElementById('content-view');
 
-        qrBtn.addEventListener('click', () => openModal('qrModal'));
-        viewResultsBtns.forEach(btn => {
-            btn.addEventListener('click', () => openModal('resultsModal'));
-        });
+            groupViewBtn.addEventListener('click', () => {
+                groupView.classList.remove('hidden');
+                contentView.classList.add('hidden');
+                groupViewBtn.classList.add('toggle-active');
+                groupViewBtn.classList.remove('toggle-inactive');
+                contentViewBtn.classList.add('toggle-inactive');
+                contentViewBtn.classList.remove('toggle-active');
+            });
 
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            const modalContent = modal.querySelector('.modal-content');
+            contentViewBtn.addEventListener('click', () => {
+                contentView.classList.remove('hidden');
+                groupView.classList.add('hidden');
+                contentViewBtn.classList.add('toggle-active');
+                contentViewBtn.classList.remove('toggle-inactive');
+                groupViewBtn.classList.add('toggle-inactive');
+                groupViewBtn.classList.remove('toggle-active');
+            });
+
+            // Modal Toggling
+            const qrButton = document.getElementById('qr-button');
+            const qrModal = document.getElementById('qr-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+
+            qrButton.addEventListener('click', () => {
+                qrModal.classList.remove('hidden');
+            });
+
+            closeModalBtn.addEventListener('click', () => {
+                qrModal.classList.add('hidden');
+            });
             
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                if (modalContent) {
-                    modalContent.classList.remove('scale-95');
+            // Close modal by clicking background
+            qrModal.addEventListener('click', (e) => {
+                if (e.target === qrModal) {
+                    qrModal.classList.add('hidden');
                 }
-            }, 10);
-        }
+            });
 
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            const modalContent = modal.querySelector('.modal-content');
+            // Prompts Data
+            const promptsTitle = document.getElementById('delivery-prompts-title');
+            const promptsContent = document.getElementById('delivery-prompts-content');
+            let selectedSegment = null;
+
+            // Data from the new screenshot
+            const chartData = {
+                labels: [
+                    'Interpersonal-Visual',
+                    'Practical-Kinaesthetic',
+                    'Intrapersonal-Kinesthetic',
+                    'Interpersonal-Auditory',
+                    'Intrapersonal-Visual',
+                    'Logical-Reading/Writing',
+                    'Practical-Visual',
+                    'Logical-Visual',
+                    'Interpersonal-Kinesthetic'
+                ],
+                learners: [
+                    ['Abdul', 'Waad', 'Ghadeer'], // 3
+                    ['Will Rankin', 'Allan', 'Abdul'], // 3
+                    ['Abdul', 'Will The Kid'], // 2
+                    ['Danah Alnamlah'], // 1
+                    ['Learner E'], // 1
+                    ['Lama'], // 1
+                    ['Shahad Alangari'], // 1
+                    ['M'], // 1
+                    ['Learner I'] // 1
+                ],
+                counts: [3, 3, 2, 1, 1, 1, 1, 1, 1],
+                percentages: ['21%', '21%', '14%', '7%', '7%', '7%', '7%', '7%', '7%'],
+                datasets: [{
+                    data: [21, 21, 14, 7, 7, 7, 7, 7, 7],
+                    backgroundColor: [
+                        '#C7B9FF', // Interpersonal-Visual
+                        '#A7F3D0', // Practical-Kinaesthetic
+                        '#A5D8FF', // Intrapersonal-Kinesthetic
+                        '#FFC1CC', // Interpersonal-Auditory
+                        '#FFDDAA', // Intrapersonal-Visual
+                        '#FFB3BA', // Logical-Reading/Writing
+                        '#BAE6FD', // Practical-Visual
+                        '#B2A4FF', // Logical-Visual
+                        '#B4E0E0'  // Interpersonal-Kinesthetic
+                    ],
+                    hoverOffset: 16,
+                    offset: (context) => (context.dataIndex === selectedSegment ? 12 : 0), // This "pops" the segment
+                    borderColor: '#fff', // This is the white gap
+                    borderWidth: 8, // This is the white gap width
+                    hoverBorderWidth: 8 // Keep hover consistent
+                }]
+            };
+
+            // Prompts mapped to the new labels (Restored)
+            const promptsData = {
+                default: `
+                    <p class="text-sm text-gray-500">Click a learning style on the chart to see specific delivery prompts.</p>
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-gray-800 font-medium">General Tip (from Alignment)</h4>
+                        <p class="text-xs text-gray-600">Your 'Visual' style is strong. Try to consciously add 'Kinaesthetic' (hands-on) activities to create balance for this group.</p>
+                    </div>
+                `,
+                'Interpersonal-Visual': `
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-blue-800 font-medium">1. Use Storyboarding</h4>
+                        <p class="text-xs text-blue-700">Ask learners to create storyboards, sketchnotes, or mind-maps in groups.</p>
+                    </div>
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-blue-800 font-medium">2. Create Group Visuals</h4>
+                        <p class="text-xs text-blue-700">Have them create poster pitches, vision boards, or infographics together.</p>
+                    </div>
+                `,
+                'Practical-Kinaesthetic': `
+                    <div class="bg-amber-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-amber-800 font-medium">1. Use Simulations</h4>
+                        <p class="text-xs text-amber-700">Use simulations, task stations, and learning labs.</p>
+                    </div>
+                    <div class="bg-amber-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-amber-800 font-medium">2. Project-Based Challenges</h4>
+                        <p class="text-xs text-amber-700">Set challenges like: 'Build a solution using X'.</css-atom-conditions>
+                    </div>
+                `,
+                'Intrapersonal-Kinesthetic': `
+                    <div class="bg-amber-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-amber-800 font-medium">1. Solo Challenge Kits</h4>
+                        <p class="text-xs text-amber-700">Offer solo task kits or 'go figure it out' builds.</p>
+                    </div>
+                    <div class="bg-amber-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-amber-800 font-medium">2. Challenge Labs</h4>
+                        <p class="text-xs text-amber-700">Provide a goal and materials, then let them solve it alone.</p>
+                    </div>
+                `,
+                'Interpersonal-Kinesthetic': `
+                    <div class="bg-amber-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-amber-800 font-medium">1. Role-Play Scenarios</h4>
+                        <p class="text-xs text-amber-700">Use role-play, physical simulations, and drama-based learning.</p>
+                    </div>
+                    <div class="bg-amber-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-amber-800 font-medium">2. 'Walk-and-Talk' Reviews</h4>
+                        <p class="text-xs text-amber-700">Incorporate props, movement breaks, or 'walk-and-talk' reviews.</p>
+                    </div>
+                `,
+                'Logical-Visual': `
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-blue-800 font-medium">1. Use Concept Maps</h4>
+                        <p class="text-xs text-blue-700">Use concept maps, process flows, and matrix diagrams.</p>
+                    </div>
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-blue-800 font-medium">2. Visual Hierarchies</h4>
+                        <p class="text-xs text-blue-700">Break complex systems into visual hierarchies (e.g., decision trees).</p>
+                    </div>
+                `,
+                'Intrapersonal-Visual': `
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-blue-800 font-medium">1. Solo Visual Tasks</h4>
+                        <p class="text-xs text-blue-700">Assign solo decoding tasks: 'Interpret this diagram independently'.</p>
+                    </div>
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-blue-800 font-medium">2. Self-Paced Study Maps</h4>
+                        <p class="text-xs text-blue-700">Encourage self-paced study maps and flowchart navigation.</p>
+                    </div>
+                `,
+                 'Logical-Reading/Writing': `
+                    <div class="bg-indigo-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-indigo-800 font-medium">1. Use Frameworks</h4>
+                        <p class="text-xs text-indigo-700">Use frameworks for logical development.</p>
+                    </div>
+                    <div class="bg-indigo-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-indigo-800 font-medium">2. Create Lists/Charts</h4>
+                        <p class="text-xs text-indigo-700">Have them write pros/cons lists, comparative charts, or structured arguments.</p>
+                    </div>
+                `,
+                'Practical-Visual': `
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-blue-800 font-medium">1. Visual Walkthroughs</h4>
+                        <p class="text-xs text-blue-700">Use sequential visual walkthroughs (e.g., annotated screenshots).</p>
+                    </div>
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-blue-800 font-medium">2. Embed Demos</h4>
+                        <p class="text-xs text-blue-700">Embed GIFs, screen recordings, or product demos.</p>
+                    </div>
+                `,
+                'Interpersonal-Auditory': `
+                    <div class="bg-teal-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-teal-800 font-medium">1. Dialogue-Rich Activities</h4>
+                        <p class="text-xs text-teal-700">Use think-pair-share, debates, and Socratic questioning.</p>
+                    </div>
+                    <div class="bg-teal-50 p-3 rounded-lg">
+                        <h4 class="text-sm text-teal-800 font-medium">2. Encourage 'Teach Backs'</h4>
+                        <p class="text-xs text-teal-700">Encourage learners to 'teach back' concepts in their own words.</p>
+                    </div>
+                `
+            };
+
+            // Content Prompts Data (Restored)
+            const contentPromptsData = {
+                'allModules': {
+                    analysis: `
+                        <div>
+                            <h4 class="font-semibold text-green-700">Overall Strength</h4>
+                            <p class="text-sm text-gray-600">The content starts strong with a 'Visual' focus (Module 1), which aligns well with 42% of the group.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-red-700">Key Risk</h4>
+                            <p class="text-sm text-gray-600">The session becomes heavily text-based by Module 3, which will disengage the significant 'Kinaesthetic' (42%) and 'Interpersonal-Auditory' (7%) learners.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-blue-700">Highest-Impact Quick Win</h4>
+                            <p class="text-sm text-gray-600">Your main priority is to add a hands-on activity to Module 3. Converting the case study to a role-play is the most effective fix.</p>
+                        </div>
+                    `,
+                    prompts: `
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <span class="text-xs font-medium text-red-600">Top Priority (Module 3)</span>
+                            <span class="block text-xs text-gray-500 font-medium">Timer Cue: 45 min mark</span>
+                            <p class="text-sm text-gray-800 font-medium">Turn the case study into a live role-play.</p>
+                            <p class="text-xs text-gray-600">This will engage your 'Interpersonal-Kinaesthetic' and 'Practical-Kinaesthetic' learners.</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <span class="text-xs font-medium text-teal-600">Suggestion (Module 2)</span>
+                            <span class="block text-xs text-gray-500 font-medium">Timer Cue: 20 min mark</span>
+                            <p class="text-sm text-gray-800 font-medium">Insert a 'Draw the Model' activity.</p>
+                            <p class="text-xs text-gray-600">Reinforces content for 'Logical-Visual' and 'Practical-Kinaesthetic' learners.</p>
+                        </div>
+                    `
+                },
+                'module1': {
+                    analysis: `
+                        <div>
+                            <h4 class="font-semibold text-green-700">Strengths</h4>
+                            <p class="text-sm text-gray-600">Module 1's video is a great opener for your 'Interpersonal-Visual' (21%) and 'Logical-Visual' (7%) learners.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-700">Risks</h4>
+                            <p class="text-sm text-gray-600">None. This is a strong start.</p>
+                        </div>
+                    `,
+                    prompts: `
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <span class="text-xs font-medium text-teal-600">Suggestion for Module 1</span>
+                            <span class="block text-xs text-gray-500 font-medium">Timer Cue: 5 min mark</span>
+                            <p class="text-sm text-gray-800 font-medium">Pause video for a quick 'what stood out?'</p>
+                            <p class="text-xs text-gray-600">This will engage 'Interpersonal-Auditory' learners early.</p>
+                        </div>
+                    `
+                },
+                'module2': {
+                    analysis: `
+                        <div>
+                            <h4 class="font-semibold text-amber-700">Risks</h4>
+                            <p class="text-sm text-gray-600">Slide-heavy content. Risk of disengaging 'Kinaesthetic' (42%) and 'Interpersonal-Auditory' (7%) learners.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-blue-700">Quick Wins</h4>
+                            <p class="text-sm text-gray-600">Break up slides with a 'Think-Pair-Share' to engage 'Interpersonal-Auditory' learners.</p>
+                        </div>
+                    `,
+                    prompts: `
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <span class="text-xs font-medium text-teal-600">Suggestion for Module 2</span>
+                            <span class="block text-xs text-gray-500 font-medium">Timer Cue: 20 min mark</span>
+                            <p class="text-sm text-gray-800 font-medium">Insert a 'Draw the Model' activity.</p>
+                            <p class="text-xs text-gray-600">After slide 10, ask learners to draw the 4-quadrant model. This reinforces for 'Logical-Visual' and 'Practical-Kinaesthetic' learners.</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <span class="text-xs font-medium text-teal-600">Suggestion for Module 2</span>
+                            <span class="block text-xs text-gray-500 font-medium">Timer Cue: 35 min mark</span>
+                            <p class="text-sm text-gray-800 font-medium">Think-Pair-Share</p>
+                            <p class="text-xs text-gray-600">Ask "How would you apply this model in your role?" and have pairs discuss for 3 minutes.</p>
+                        </div>
+                    `
+                },
+                'module3': {
+                    analysis: `
+                        <div>
+                            <h4 class="font-semibold text-red-700">High Risk</h4>
+                            <p class="text-sm text-gray-600">Module 3 is text-only. This will strongly disengage your 'Kinaesthetic' learners (42%).</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-blue-700">Quick Wins</h4>
+                            <p class="text-sm text-gray-600">Must add a hands-on component. Role-play is the fastest way to engage 'Kinaesthetic' and 'Interpersonal' styles.</p>
+                        </div>
+                    `,
+                    prompts: `
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <span class="text-xs font-medium text-red-600">Suggestion for Module 3</span>
+                            <span class="block text-xs text-gray-500 font-medium">Timer Cue: 45 min mark</span>
+                            <p class="text-sm text-gray-800 font-medium">Turn the case study into a live role-play.</p>
+                            <p class="text-xs text-gray-600">This will engage your 'Interpersonal-Kinaesthetic' and 'Practical-Kinaesthetic' learners.</p>
+                        </div>
+                    `
+                }
+            };
+
+            // Set initial prompt
+            promptsContent.innerHTML = promptsData.default;
+
+            // Content View Panels (Restored)
+            // ****** FIX STARTS HERE ******
+            // Added the 'id' attributes to the panel containers and fixed the JavaScript selectors
+            const contentAnalysisPanel = document.getElementById('content-analysis-panel').querySelector('.scrollable-panel');
+            const deliveryPromptsAytPanel = document.getElementById('delivery-prompts-ayt-panel').querySelector('.scrollable-panel');
+            // ****** FIX ENDS HERE ******
             
-            modal.classList.add('opacity-0');
-            if (modalContent) {
-                modalContent.classList.add('scale-95');
+            // Function to update content panels
+            function updateContentPanels(moduleKey) {
+                const data = contentPromptsData[moduleKey] || contentPromptsData['allModules']; // Default to allModules
+                contentAnalysisPanel.innerHTML = data.analysis;
+                deliveryPromptsAytPanel.innerHTML = data.prompts;
             }
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }, 300);
-        }
-    </script>
 
+            // Set initial content panel state
+            updateContentPanels('allModules');
+
+            // Add click listener for module items
+            const moduleItems = document.querySelectorAll('.module-item');
+            moduleItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Remove selected class from all
+                    moduleItems.forEach(i => i.classList.remove('selected-module'));
+                    // Add selected class to clicked item
+                    item.classList.add('selected-module');
+                    // Update panels
+                    const moduleKey = item.getAttribute('data-module');
+                    updateContentPanels(moduleKey);
+                });
+            });
+
+            // Create Donut Chart
+            const ctxDonut = document.getElementById('learningStyleChart').getContext('2d');
+            const donutChart = new Chart(ctxDonut, {
+                type: 'doughnut',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            display: false // Disable default legend
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: '#1f2937', // gray-800
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 12 },
+                            padding: 12,
+                            cornerRadius: 6,
+                            displayColors: false,
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    return tooltipItems[0].label;
+                                },
+                                label: function(tooltipItem) {
+                                    const percentage = tooltipItem.raw.toFixed(0) + '%';
+                                    return ` ${percentage} of group`;
+                                },
+                                afterBody: function(tooltipItems) {
+                                    const learners = chartData.learners[tooltipItems[0].dataIndex];
+                                    return '\nLearners:\n' + learners.map(l => `• ${l}`).join('\n');
+                                }
+                            }
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const clickedIndex = elements[0].index;
+                            const style = chartData.labels[clickedIndex];
+                            
+                            if (selectedSegment === clickedIndex) {
+                                // Deselect
+                                promptsTitle.textContent = 'Delivery Prompts';
+                                promptsContent.innerHTML = promptsData.default;
+                                selectedSegment = null;
+                            } else {
+                                // Select
+                                promptsTitle.textContent = `Prompts for '${style}'`;
+                                promptsContent.innerHTML = promptsData[style] || promptsData.default;
+                                selectedSegment = clickedIndex;
+                            }
+                            donutChart.update(); // Redraw chart to show/hide highlight
+                        }
+                    }
+                }
+            });
+
+            // Build Custom Legend
+            const legendContainer = document.getElementById('custom-legend-container');
+            chartData.labels.forEach((label, index) => {
+                const color = chartData.datasets[0].backgroundColor[index];
+                const count = chartData.counts[index];
+                const percentage = chartData.percentages[index];
+
+                const item = document.createElement('div');
+                item.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+                item.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="h-4 w-4 rounded-full" style="background-color: ${color}"></span>
+                        <span class="text-sm font-medium text-gray-700">${label}</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm font-bold text-gray-800">${count}</span>
+                        <span class="text-sm text-gray-600 w-8 text-right">${percentage}</span>
+                    </div>
+                `;
+                legendContainer.appendChild(item);
+            });
+
+
+            // Create Line Chart
+            const ctxLine = document.getElementById('engagementChart').getContext('2d');
+            const lineChart = new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: ['1', '2', '3', '4', '5', '6', '7'],
+                    datasets: [{
+                        label: 'Engagement Score',
+                        data: [4.2, 3.2, 3.6, 3.8, 3.8, 4.1, 4.3],
+                        fill: true,
+                        backgroundColor: 'rgba(20, 184, 170, 0.1)',
+                        borderColor: '#0D9488', // teal-600
+                        tension: 0.3,
+                        pointBackgroundColor: '#0D9488',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#0D9488',
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 3,
+                            max: 5,
+                            grid: {
+                                drawTicks: false
+                            },
+                            ticks: {
+                                padding: 10,
+                                font: { size: 10 },
+                                stepSize: 1
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Sessions',
+                                font: { size: 12, weight: 'medium' },
+                                color: '#475569'
+                            },
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                padding: 10,
+                                font: { size: 10 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: '#1f2937', // gray-800
+                            titleFont: { size: 12, weight: 'bold' },
+                            bodyFont: { size: 12 },
+                            padding: 10,
+                            cornerRadius: 6,
+                            displayColors: false,
+                            callbacks: {
+                                title: (tooltipItems) => `Session ${tooltipItems[0].label}`
+                            }
+                        }
+                    }
+                }
+            });
+
+        });
+    </script>
 </body>
 </html>
-
-
 
